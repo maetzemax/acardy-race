@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://un1xgkhi1vmp"]
+[gd_scene load_steps=14 format=3 uid="uid://un1xgkhi1vmp"]
 
 [ext_resource type="Texture2D" uid="uid://c7nu6kug37p0y" path="res://icon.svg" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://c43ohah683tc5" path="res://vehicle.gd" id="2_0xm2m"]
 [ext_resource type="Script" uid="uid://cc23jnt5cf5bs" path="res://follow_camera.gd" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://c4m1g4n5tuqko" path="res://vehicle_debug_ui.gd" id="4_1bvp3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -69,15 +70,9 @@ mass = 1200.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.3, 0)
 script = ExtResource("2_0xm2m")
-acceleration = 1200.0
-normal_brake_force = 80.0
-handbrake_force = 80.0
+normal_brake_force = 8.0
 suspension_stiff_value = 100.0
-anti_roll_force = 30.0
-downforce_factor = 100.0
-max_rpm = 8000.0
 auto_transmission = false
-shift_up_rpm = 7000.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="VehicleBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
@@ -187,3 +182,11 @@ radius = 0.15
 transform = Transform3D(0.3698603, -0.9290874, 0, 0.9290874, 0.3698603, 0, 0, 0, 1, 12.453325, -0.37440526, 20.800436)
 use_collision = true
 size = Vector3(1, 15.262512, 11.031006)
+
+[node name="Control" type="Control" parent="." node_paths=PackedStringArray("vehicle")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("4_1bvp3")
+vehicle = NodePath("../VehicleBody3D")
