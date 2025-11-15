@@ -1,0 +1,178 @@
+[gd_scene load_steps=12 format=3 uid="uid://un1xgkhi1vmp"]
+
+[ext_resource type="Texture2D" uid="uid://c7nu6kug37p0y" path="res://icon.svg" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://c43ohah683tc5" path="res://vehicle.gd" id="2_0xm2m"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_h2yge"]
+sky_material = SubResource("ProceduralSkyMaterial_0xm2m")
+
+[sub_resource type="Environment" id="Environment_1bvp3"]
+background_mode = 2
+sky = SubResource("Sky_h2yge")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lquwl"]
+albedo_texture = ExtResource("1_ig7tw")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7mycd"]
+size = Vector2(100, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_272bh"]
+size = Vector3(100, 0.01, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5vw27"]
+size = Vector3(1, 0.5, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kek77"]
+size = Vector3(1, 0.5, 2)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0xm2m"]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 0.15
+radial_segments = 26
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1bvp3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+material_override = SubResource("StandardMaterial3D_lquwl")
+mesh = SubResource("PlaneMesh_7mycd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_272bh")
+
+[node name="VehicleBody3D" type="VehicleBody3D" parent="."]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+mass = 1200.0
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, -0.3, 0)
+script = ExtResource("2_0xm2m")
+acceleration = 80.0
+handbrake_force = 8.0
+wheel_friction = 3.5
+suspension_stiff_value = 40.0
+roll_influence = 0.1
+anti_roll_force = 30.0
+downforce_factor = 100.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VehicleBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("BoxMesh_5vw27")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VehicleBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_kek77")
+
+[node name="WheelFrontLeft" type="VehicleWheel3D" parent="VehicleBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.67619514, 0.7)
+use_as_traction = true
+use_as_steering = true
+wheel_radius = 0.3
+wheel_rest_length = 0.2
+wheel_friction_slip = 3.5
+suspension_travel = 0.3
+suspension_stiffness = 40.0
+suspension_max_force = 40000.0
+damping_compression = 0.8
+damping_relaxation = 0.9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VehicleBody3D/WheelFrontLeft"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_0xm2m")
+
+[node name="WheelFrontRight" type="VehicleWheel3D" parent="VehicleBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.67619514, 0.7)
+use_as_traction = true
+use_as_steering = true
+wheel_radius = 0.3
+wheel_rest_length = 0.2
+wheel_friction_slip = 3.5
+suspension_travel = 0.3
+suspension_stiffness = 40.0
+suspension_max_force = 40000.0
+damping_compression = 0.8
+damping_relaxation = 0.9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VehicleBody3D/WheelFrontRight"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_0xm2m")
+
+[node name="WheelRearLeft" type="VehicleWheel3D" parent="VehicleBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.67619514, -0.7)
+use_as_traction = true
+wheel_radius = 0.3
+wheel_rest_length = 0.2
+wheel_friction_slip = 2.5
+suspension_travel = 0.3
+suspension_stiffness = 40.0
+suspension_max_force = 40000.0
+damping_compression = 0.8
+damping_relaxation = 0.9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VehicleBody3D/WheelRearLeft"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_0xm2m")
+
+[node name="WheelRearRight" type="VehicleWheel3D" parent="VehicleBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.67619514, -0.7)
+use_as_traction = true
+wheel_radius = 0.3
+wheel_rest_length = 0.2
+wheel_friction_slip = 2.5
+suspension_travel = 0.3
+suspension_stiffness = 40.0
+suspension_max_force = 40000.0
+damping_compression = 0.8
+damping_relaxation = 0.9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VehicleBody3D/WheelRearRight"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_0xm2m")
+
+[node name="Camera3D" type="Camera3D" parent="VehicleBody3D"]
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 2.291, -3.298)
+fov = 84.5
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.11101532, -4.5757456)
+use_collision = true
+radius = 0.15
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.11101532, -5.0886574)
+use_collision = true
+radius = 0.15
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.11101532, -5.6015697)
+use_collision = true
+radius = 0.15
+
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.11101532, -6.2077384)
+use_collision = true
+radius = 0.15
+
+[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.11101532, -6.9887633)
+use_collision = true
+radius = 0.15
+
+[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.11101532, -6.9887633)
+use_collision = true
+radius = 0.15
