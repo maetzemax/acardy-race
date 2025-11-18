@@ -45,6 +45,12 @@ var downforce: Vector3
 @export var min_volume: float = -10.0
 @export var max_volume: float = 0.0
 
+# Input Deadzones
+var input_steering_deadzone: float = 0.0
+var input_accelerate_deadzone: float = 0.05
+var input_brake_deadzone: float = 0.05
+var brake_strength: float = 0.0
+
 
 func _physics_process(delta: float):
 	_handle_friction()
@@ -65,6 +71,15 @@ func _physics_process(delta: float):
 func _handle_vehicle_control(delta):
 	# Separate Inputs für Gas und Bremse
 	var accelerate_input = Input.get_action_strength("accelerate")
+	var brake_input = Input.get_action_strength("brake")
+	var steering_raw = Input.get_action_strength("turn_left") - Input.get_action_strength("turn_right")
+	
+	# Deadzone anwenden und remappen (0.0-deadzone wird zu 0%, deadzone-1.0 wird zu 0%-100%)
+	accelerate_input = _apply_deadzone_remap(accelerate_input, input_accelerate_deadzone)
+	brake_input = _apply_deadzone_remap(brake_input, input_brake_deadzone)
+	steering_raw = _apply_deadzone_remap(steering_raw, input_steering_deadzone)
+	
+	brake_strength = brake_input
 	
 	if Input.is_action_just_pressed("shift_up"):
 		current_gear = 1  # Vorwärts
@@ -76,7 +91,7 @@ func _handle_vehicle_control(delta):
 	# Throttle mit Gang multiplizieren
 	throttle = accelerate_input * current_gear
 	
-	steering_input = Input.get_action_strength("turn_left") - Input.get_action_strength("turn_right")
+	steering_input = steering_raw
 	steering = move_toward(steering, steering_input * max_steering_angle, delta * steering_speed)
 
 
@@ -111,8 +126,7 @@ func _handle_anti_roll():
 		wheel.wheel_roll_influence = roll_influence
 
 func _handle_brake():
-	var brake_input = Input.get_action_strength("brake")
-	brake = brake_input * normal_brake_force
+	brake = brake_strength * normal_brake_force
 
 
 func _handle_friction():
@@ -150,6 +164,31 @@ func _detect_surface(wheel: VehicleWheel3D) -> String:
 				return "track"
 	
 	return "track"  # Default
+
+
+func _apply_deadzone_remap(input_value: float, deadzone: float) -> float:
+	"""
+	Wendet Deadzone an und remappt den Wert:
+	- Werte unter deadzone → 0.0
+	- Werte von deadzone bis 1.0 → linear auf 0.0 bis 1.0 gemappt
+	"""
+	var abs_value = abs(input_value)
+	var sign_value = sign(input_value)
+	
+	if abs_value < deadzone:
+		return 0.0
+	
+	# Remap von [deadzone, 1.0] zu [0.0, 1.0]
+	var remapped = (abs_value - deadzone) / (1.0 - deadzone)
+	return remapped * sign_value
+
+
+func set_input_deadzones(steering_dz: float, accelerate_dz: float, brake_dz: float):
+	"""Wird vom Input Settings UI aufgerufen"""
+	input_steering_deadzone = steering_dz
+	input_accelerate_deadzone = accelerate_dz
+	input_brake_deadzone = brake_dz
+	print("Deadzones gesetzt: Steering=%.2f, Accelerate=%.2f, Brake=%.2f" % [steering_dz, accelerate_dz, brake_dz])
 
 
 func _handle_engine_sound():
