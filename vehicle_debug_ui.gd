@@ -9,15 +9,23 @@ extends Control
 @onready var throttle_bar: ProgressBar
 @onready var brake_bar: ProgressBar
 @onready var steering_bar: ProgressBar
+@onready var lap_time_label: Label
+@onready var best_time_label: Label
 
 # Farben
 var color_throttle = Color(0.2, 1.0, 0.2)  # Grün
 var color_brake = Color(1.0, 0.2, 0.2)      # Rot
 var color_steering = Color(0.2, 0.5, 1.0)   # Blau
 
+# Rundenzeit
+var current_lap_time: float = 0.0
+var best_lap_time: float = 0.0
+var is_timing: bool = false
+
 
 func _ready():
 	_create_ui()
+	_load_best_time()
 
 
 func _create_ui():
@@ -26,6 +34,31 @@ func _create_ui():
 	main_container.position = Vector2(20, 20)
 	main_container.add_theme_constant_override("separation", 10)
 	add_child(main_container)
+	
+	# Rundenzeit-Anzeige (oben rechts)
+	var lap_container = VBoxContainer.new()
+	lap_container.position = Vector2(get_viewport().size.x - 320, 20)
+	lap_container.add_theme_constant_override("separation", 5)
+	add_child(lap_container)
+	
+	var lap_panel = PanelContainer.new()
+	var lap_vbox = VBoxContainer.new()
+	lap_panel.add_child(lap_vbox)
+	
+	# Aktuelle Rundenzeit
+	lap_time_label = Label.new()
+	lap_time_label.add_theme_font_size_override("font_size", 32)
+	lap_time_label.text = "Zeit: 0:00.000"
+	lap_vbox.add_child(lap_time_label)
+	
+	# Bestzeit
+	best_time_label = Label.new()
+	best_time_label.add_theme_font_size_override("font_size", 20)
+	best_time_label.add_theme_color_override("font_color", Color.GOLD)
+	best_time_label.text = "Best: --:--"
+	lap_vbox.add_child(best_time_label)
+	
+	lap_container.add_child(lap_panel)
 	
 	# Tacho (groß und prominent)
 	var tacho_panel = PanelContainer.new()
@@ -79,9 +112,16 @@ func _create_pedal_display(label_text: String, bar_color: Color) -> PanelContain
 	return panel
 
 
-func _process(_delta):
+func _process(delta):
 	if vehicle == null:
 		return
+	
+	# Rundenzeit aktualisieren
+	if is_timing:
+		current_lap_time += delta
+		lap_time_label.text = "Zeit: " + _format_time(current_lap_time)
+	else:
+		lap_time_label.text = "Start/Ziel passieren"
 	
 	# Geschwindigkeit in km/h
 	var speed_ms = vehicle.linear_velocity.length()
@@ -104,3 +144,58 @@ func _process(_delta):
 	if vehicle.steering:
 		var steering_percent = (vehicle.steering / vehicle.max_steering_angle) * 50.0 + 50.0
 		steering_bar.value = steering_percent
+
+
+func _format_time(time_seconds: float) -> String:
+	"""Formatiert Zeit als M:SS.mmm"""
+	var minutes = int(time_seconds / 60)
+	var seconds = int(time_seconds) % 60
+	var milliseconds = int((time_seconds - int(time_seconds)) * 1000)
+	return "%d:%02d.%03d" % [minutes, seconds, milliseconds]
+
+
+func start_lap():
+	"""Startet eine neue Runde"""
+	current_lap_time = 0.0
+	is_timing = true
+	print("Runde gestartet!")
+
+
+func finish_lap():
+	"""Beendet die Runde und speichert Bestzeit"""
+	if not is_timing:
+		return
+	
+	is_timing = false
+	
+	print("Runde beendet: ", _format_time(current_lap_time))
+	
+	# Pr\u00fcfe ob neue Bestzeit
+	if best_lap_time == 0.0 or current_lap_time < best_lap_time:
+		best_lap_time = current_lap_time
+		_save_best_time()
+		best_time_label.text = "Best: " + _format_time(best_lap_time) + " \u2605 NEW!"
+		print("Neue Bestzeit!")
+	else:
+		best_time_label.text = "Best: " + _format_time(best_lap_time)
+
+
+func _save_best_time():
+	"""Speichert Bestzeit in User Preferences"""
+	var config = ConfigFile.new()
+	config.set_value("lap_times", "best_time", best_lap_time)
+	config.save("user://lap_times.cfg")
+
+
+func _load_best_time():
+	"""L\u00e4dt Bestzeit aus User Preferences"""
+	var config = ConfigFile.new()
+	var err = config.load("user://lap_times.cfg")
+	
+	if err == OK:
+		best_lap_time = config.get_value("lap_times", "best_time", 0.0)
+		if best_lap_time > 0.0:
+			best_time_label.text = "Best: " + _format_time(best_lap_time)
+			print("Bestzeit geladen: ", _format_time(best_lap_time))
+	else:
+		print("Keine gespeicherte Bestzeit gefunden")

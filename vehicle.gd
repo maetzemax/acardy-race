@@ -2,55 +2,79 @@ extends VehicleBody3D
 
 var throttle: float = 0.0
 var steering_input: float = 0.0
+var current_gear: int = 1  # 1 = Vorwärts, -1 = Rückwärts
 
 @onready var wheel_front_left: VehicleWheel3D = $WheelFrontLeft
 @onready var wheel_front_right: VehicleWheel3D = $WheelFrontRight
 @onready var wheel_rear_left: VehicleWheel3D = $WheelRearLeft
 @onready var wheel_rear_right: VehicleWheel3D = $WheelRearRight
+@onready var engine_sound: AudioStreamPlayer = $AudioStreamPlayer
 
 @export_group("Speed")
 @export var acceleration: float = 120
-@export var max_engine_power: float = 300.0  # PS/Leistung des Motors (erhöht für bessere Performance)
+@export var max_engine_power: float = 300.0
 @export var vehicle_linear_velocity: float = 0.0
 
 @export_group("Steering & Brake")
 @export var steering_speed = 1.5
 @export var max_steering_angle = 0.65
-@export var normal_brake_force: float = 3.0  # Normale Bremse (S-Taste)
-var is_braking: bool = false
+@export var normal_brake_force: float = 3.0
 
 @export_group("Supension Settings")
 @export var wheel_friction: float = 10.5
 @export var suspension_stiff_value: float = 0.0
 
+# Friction-Werte für verschiedene Untergründe
+var friction_values = {
+	"track": 1.00,
+	"grass": 0.2,
+}
+
 @export_group("Stability Control")
-@export var roll_influence: float = 0.1  # Niedriger = weniger Wippen
+@export var roll_influence: float = 0.1
 var anti_roll_torque: Vector3
 var downforce: Vector3
-@export var anti_roll_force: float = 50.0  # Erhöht für weniger Wippen
-@export var anti_pitch_force: float = 80.0  # Verhindert Wippen beim Beschleunigen/Bremsen
-@export var downforce_factor: float = 20.0  # Reduziert - war zu stark bei hoher Geschwindigkeit
-@export var downforce_front_bias: float = 0.55  # 55% vorne, 45% hinten für Balance
+@export var anti_roll_force: float = 50.0
+@export var anti_pitch_force: float = 80.0
+@export var downforce_factor: float = 20.0
+@export var downforce_front_bias: float = 0.55
+
+@export_group("Engine Sound")
+@export var min_pitch: float = 0.8
+@export var max_pitch: float = 2.0
+@export var min_volume: float = -10.0
+@export var max_volume: float = 0.0
 
 
 func _physics_process(delta: float):
-	for wheel in [wheel_front_left, wheel_front_right, wheel_rear_left, wheel_rear_right]:
-		wheel.wheel_friction_slip = wheel_friction
+	_handle_friction()
+	
+	for wheel in [wheel_front_left, wheel_front_right]:
+		wheel.suspension_stiffness = suspension_stiff_value
+		
+	for wheel in [wheel_rear_left, wheel_rear_right]:
 		wheel.suspension_stiffness = suspension_stiff_value
 	
 	_handle_vehicle_control(delta)
 	_handle_vehicle_velocity()
 	_handle_anti_roll()
 	_handle_brake()
+	_handle_engine_sound()
 
 
 func _handle_vehicle_control(delta):
 	# Separate Inputs für Gas und Bremse
 	var accelerate_input = Input.get_action_strength("accelerate")
-	is_braking = Input.is_action_pressed("brake")
 	
-	# Throttle nur Gas, keine Bremse mehr
-	throttle = accelerate_input
+	if Input.is_action_just_pressed("shift_up"):
+		current_gear = 1  # Vorwärts
+		print("Gang: Vorwärts")
+	elif Input.is_action_just_pressed("shift_down"):
+		current_gear = -1  # Rückwärts
+		print("Gang: Rückwärts")
+	
+	# Throttle mit Gang multiplizieren
+	throttle = accelerate_input * current_gear
 	
 	steering_input = Input.get_action_strength("turn_left") - Input.get_action_strength("turn_right")
 	steering = move_toward(steering, steering_input * max_steering_angle, delta * steering_speed)
@@ -63,28 +87,22 @@ func _handle_vehicle_velocity():
 
 
 func _handle_anti_roll():
-	# Berechne Neigung (Roll) auf X-Achse
 	var roll_angle = global_rotation.x
 	
-	# Anti-Roll-Torque um Z-Achse (gegen Seitenneigung)
 	anti_roll_torque = -global_transform.basis.z * roll_angle * anti_roll_force
 	apply_torque(anti_roll_torque)
 	
-	# Anti-Pitch: Verhindert Nicken beim Beschleunigen/Bremsen (Rotation um X-Achse)
-	var pitch_angle = global_rotation.z  # Nicken vorwärts/rückwärts
+	var pitch_angle = global_rotation.z
 	var anti_pitch_torque = -global_transform.basis.x * pitch_angle * anti_pitch_force
 	apply_torque(anti_pitch_torque)
 	
-	# Balancierte Downforce: Mehr vorne um Heck-Aufsetzen zu verhindern
 	var speed_squared = vehicle_linear_velocity * vehicle_linear_velocity
 	var total_downforce = speed_squared * downforce_factor * 0.01
 	
-	# Vorne mehr Downforce (55%)
 	var front_downforce_pos = (wheel_front_left.global_position + wheel_front_right.global_position) / 2.0
 	var front_force = -global_transform.basis.y * total_downforce * downforce_front_bias
 	apply_force(front_force, front_downforce_pos - global_position)
 	
-	# Hinten weniger Downforce (45%)
 	var rear_downforce_pos = (wheel_rear_left.global_position + wheel_rear_right.global_position) / 2.0
 	var rear_force = -global_transform.basis.y * total_downforce * (1.0 - downforce_front_bias)
 	apply_force(rear_force, rear_downforce_pos - global_position)
@@ -93,8 +111,62 @@ func _handle_anti_roll():
 		wheel.wheel_roll_influence = roll_influence
 
 func _handle_brake():
-	# Normale Bremse (alle 4 Räder)
-	if is_braking:
-		brake = normal_brake_force
-	else:
-		brake = 0.0
+	var brake_input = Input.get_action_strength("brake")
+	brake = brake_input * normal_brake_force
+
+
+func _handle_friction():
+	"""Passt Friction dynamisch basierend auf Untergrund an"""
+	for wheel in [wheel_front_left, wheel_front_right, wheel_rear_left, wheel_rear_right]:
+		if wheel == null:
+			continue
+		
+		var surface_type = _detect_surface(wheel)
+		var friction = friction_values.get(surface_type, wheel_friction)
+		
+		# Hinterräder leicht weniger Friction für besseres Handling
+		if wheel == wheel_rear_left or wheel == wheel_rear_right:
+			friction -= 0.02
+		
+		wheel.wheel_friction_slip = friction
+
+
+func _detect_surface(wheel: VehicleWheel3D) -> String:
+	"""Detektiert Oberfläche unter dem Rad via Raycast"""
+	var space_state = get_world_3d().direct_space_state
+	var ray_origin = wheel.global_position
+	var ray_end = ray_origin + Vector3.DOWN * 1.0
+	
+	var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
+	var result = space_state.intersect_ray(query)
+	
+	if result:
+		var collider = result.get("collider")
+		if collider:
+			# Prüfe Gruppen
+			if collider.is_in_group("grass"):
+				return "grass"
+			elif collider.is_in_group("track"):
+				return "track"
+	
+	return "track"  # Default
+
+
+func _handle_engine_sound():
+	"""Passt Engine Sound an Geschwindigkeit und Throttle an"""
+	if engine_sound == null:
+		return
+	
+	if not engine_sound.playing:
+		engine_sound.play()
+	
+	var speed_factor = clamp(vehicle_linear_velocity / 30.0, 0.0, 1.0)  # 0-30 m/s
+	var throttle_factor = abs(throttle)
+	
+	var rpm_factor = (throttle_factor * 0.7) + (speed_factor * 0.3)
+	rpm_factor = clamp(rpm_factor, 0.0, 1.0)
+	
+	engine_sound.pitch_scale = lerp(min_pitch, max_pitch, rpm_factor)
+	
+	var target_volume = lerp(min_volume, max_volume, throttle_factor)
+	engine_sound.volume_db = target_volume
