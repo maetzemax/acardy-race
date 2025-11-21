@@ -12,7 +12,6 @@ var current_gear: int = 1  # 1 = Vorwärts, -1 = Rückwärts
 
 @export_group("Speed")
 @export var acceleration: float = 120
-@export var max_engine_power: float = 300.0
 @export var vehicle_linear_velocity: float = 0.0
 
 @export_group("Steering & Brake")
@@ -21,23 +20,16 @@ var current_gear: int = 1  # 1 = Vorwärts, -1 = Rückwärts
 @export var normal_brake_force: float = 3.0
 
 @export_group("Supension Settings")
-@export var wheel_friction: float = 10.5
-@export var suspension_stiff_value: float = 0.0
-
-# Friction-Werte für verschiedene Untergründe
-var friction_values = {
-	"track": 1.00,
-	"grass": 0.2,
-}
+@export var suspension_stiff_value: float = 200.0
 
 @export_group("Stability Control")
 @export var roll_influence: float = 0.1
 var anti_roll_torque: Vector3
 var downforce: Vector3
 @export var anti_roll_force: float = 50.0
-@export var anti_pitch_force: float = 80.0
-@export var downforce_factor: float = 20.0
-@export var downforce_front_bias: float = 0.55
+@export var anti_pitch_force: float = 200.0
+@export var downforce_factor: float = 120.0
+@export var downforce_front_bias: float = 0.5
 
 @export_group("Engine Sound")
 @export var min_pitch: float = 0.8
@@ -47,14 +39,12 @@ var downforce: Vector3
 
 # Input Deadzones
 var input_steering_deadzone: float = 0.0
-var input_accelerate_deadzone: float = 0.05
-var input_brake_deadzone: float = 0.05
+var input_accelerate_deadzone: float = 0.0
+var input_brake_deadzone: float = 0.0
 var brake_strength: float = 0.0
 
 
 func _physics_process(delta: float):
-	_handle_friction()
-	
 	for wheel in [wheel_front_left, wheel_front_right]:
 		wheel.suspension_stiffness = suspension_stiff_value
 		
@@ -95,6 +85,10 @@ func _handle_vehicle_control(delta):
 	steering = move_toward(steering, steering_input * max_steering_angle, delta * steering_speed)
 
 
+func _handle_vehicle_transmission():
+	pass
+
+
 func _handle_vehicle_velocity():
 	vehicle_linear_velocity = linear_velocity.length()
 	
@@ -129,49 +123,7 @@ func _handle_brake():
 	brake = brake_strength * normal_brake_force
 
 
-func _handle_friction():
-	"""Passt Friction dynamisch basierend auf Untergrund an"""
-	for wheel in [wheel_front_left, wheel_front_right, wheel_rear_left, wheel_rear_right]:
-		if wheel == null:
-			continue
-		
-		var surface_type = _detect_surface(wheel)
-		var friction = friction_values.get(surface_type, wheel_friction)
-		
-		# Hinterräder leicht weniger Friction für besseres Handling
-		if wheel == wheel_rear_left or wheel == wheel_rear_right:
-			friction -= 0.02
-		
-		wheel.wheel_friction_slip = friction
-
-
-func _detect_surface(wheel: VehicleWheel3D) -> String:
-	"""Detektiert Oberfläche unter dem Rad via Raycast"""
-	var space_state = get_world_3d().direct_space_state
-	var ray_origin = wheel.global_position
-	var ray_end = ray_origin + Vector3.DOWN * 1.0
-	
-	var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
-	var result = space_state.intersect_ray(query)
-	
-	if result:
-		var collider = result.get("collider")
-		if collider:
-			# Prüfe Gruppen
-			if collider.is_in_group("grass"):
-				return "grass"
-			elif collider.is_in_group("track"):
-				return "track"
-	
-	return "track"  # Default
-
-
 func _apply_deadzone_remap(input_value: float, deadzone: float) -> float:
-	"""
-	Wendet Deadzone an und remappt den Wert:
-	- Werte unter deadzone → 0.0
-	- Werte von deadzone bis 1.0 → linear auf 0.0 bis 1.0 gemappt
-	"""
 	var abs_value = abs(input_value)
 	var sign_value = sign(input_value)
 	
@@ -184,15 +136,12 @@ func _apply_deadzone_remap(input_value: float, deadzone: float) -> float:
 
 
 func set_input_deadzones(steering_dz: float, accelerate_dz: float, brake_dz: float):
-	"""Wird vom Input Settings UI aufgerufen"""
 	input_steering_deadzone = steering_dz
 	input_accelerate_deadzone = accelerate_dz
 	input_brake_deadzone = brake_dz
-	print("Deadzones gesetzt: Steering=%.2f, Accelerate=%.2f, Brake=%.2f" % [steering_dz, accelerate_dz, brake_dz])
 
 
 func _handle_engine_sound():
-	"""Passt Engine Sound an Geschwindigkeit und Throttle an"""
 	if engine_sound == null:
 		return
 	
