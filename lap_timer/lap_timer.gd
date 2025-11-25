@@ -2,14 +2,14 @@ extends Node
 
 ## Lap Timer Manager - verbindet Checkpoints mit UI
 
-@export var vehicle: VehicleBody3D
-@export var debug_ui: Control
+@export var laptime_service: LaptimeService
 
+@export var vehicle: VehicleBody3D
+
+var current_lap_time: float = 0.0
 var lap_started: bool = false
 
-
 func _ready():
-	# Finde alle Checkpoints in der Szene
 	var checkpoints = get_tree().get_nodes_in_group("lap_checkpoints")
 	
 	for checkpoint in checkpoints:
@@ -17,25 +17,22 @@ func _ready():
 			checkpoint.lap_completed.connect(_on_lap_completed)
 
 
+func _process(delta: float) -> void:
+	current_lap_time += delta
+	
+
 func _on_lap_completed(crossing_vehicle: Node3D):
-	# Prüfe ob es unser Vehicle ist
 	if crossing_vehicle != vehicle:
 		return
 	
 	if not lap_started:
-		# Erste Überquerung = Start
-		if debug_ui and debug_ui.has_method("start_lap"):
-			debug_ui.start_lap()
 		lap_started = true
 	else:
-		# Zweite Überquerung = Finish
-		if debug_ui and debug_ui.has_method("finish_lap"):
-			
-			debug_ui.finish_lap()
-		lap_started = false
+		if current_lap_time < laptime_service.best_lap_time:
+			laptime_service.best_lap_time = current_lap_time
+			laptime_service.set_leaderboard_laptime(current_lap_time)
 		
-		# Optional: Auto-Restart für nächste Runde
+		current_lap_time = 0
+		
 		await get_tree().create_timer(1.0).timeout
-		if debug_ui and debug_ui.has_method("start_lap"):
-			debug_ui.start_lap()
-		lap_started = true
+		laptime_service.load_best_time()

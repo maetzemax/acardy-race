@@ -1,7 +1,8 @@
 extends Control
 
 ## Debug UI für Fahrzeug-Informationen
-
+@export var laptime_service: LaptimeService
+@export var laptimer: Node3D
 @export var vehicle: VehicleBody3D
 
 # UI Elemente
@@ -17,17 +18,9 @@ var color_throttle = Color(0.2, 1.0, 0.2)  # Grün
 var color_brake = Color(1.0, 0.2, 0.2)      # Rot
 var color_steering = Color(0.2, 0.5, 1.0)   # Blau
 
-# Rundenzeit
-var current_lap_time: float = 0.0
-var best_lap_time: float = 0.0
-var is_timing: bool = false
-
 
 func _ready():
 	_create_ui()
-	
-	await get_tree().create_timer(1.0).timeout
-	_load_best_time()
 
 
 func _create_ui():
@@ -114,16 +107,16 @@ func _create_pedal_display(label_text: String, bar_color: Color) -> PanelContain
 	return panel
 
 
-func _process(delta):
+func _process(_delta):
 	if vehicle == null:
 		return
 	
-	# Rundenzeit aktualisieren
-	if is_timing:
-		current_lap_time += delta
-		lap_time_label.text = "Zeit: " + _format_time(current_lap_time)
+	if laptimer.lap_started:
+		lap_time_label.text = "Zeit: " + _format_time(laptimer.current_lap_time)
 	else:
 		lap_time_label.text = "Start/Ziel passieren"
+		
+	best_time_label.text = _format_time(laptime_service.best_lap_time)
 	
 	# Geschwindigkeit in km/h
 	var speed_ms = vehicle.linear_velocity.length()
@@ -131,9 +124,9 @@ func _process(delta):
 	speed_label.text = "%d km/h" % speed_kmh
 	
 	# Farbe basierend auf Geschwindigkeit
-	if speed_kmh < 50:
+	if speed_kmh < 100:
 		speed_label.add_theme_color_override("font_color", Color.WHITE)
-	elif speed_kmh < 100:
+	elif speed_kmh < 150:
 		speed_label.add_theme_color_override("font_color", Color.YELLOW)
 	else:
 		speed_label.add_theme_color_override("font_color", Color.RED)
@@ -154,76 +147,3 @@ func _format_time(time_seconds: float) -> String:
 	var seconds = int(time_seconds) % 60
 	var milliseconds = int((time_seconds - int(time_seconds)) * 1000)
 	return "%d:%02d.%03d" % [minutes, seconds, milliseconds]
-
-
-func start_lap():
-	"""Startet eine neue Runde"""
-	current_lap_time = 0.0
-	is_timing = true
-	print("Runde gestartet!")
-
-
-func finish_lap():
-	"""Beendet die Runde und speichert Bestzeit"""
-	if not is_timing:
-		return
-	
-	is_timing = false
-	
-	print("Runde beendet: ", _format_time(current_lap_time))
-	
-	# Pr\u00fcfe ob neue Bestzeit
-	if best_lap_time == 0.0 or current_lap_time < best_lap_time:
-		best_lap_time = current_lap_time
-		_save_best_time()
-		best_time_label.text = "Best: " + _format_time(best_lap_time) + " \u2605 NEW!"
-		print("Neue Bestzeit!")
-	else:
-		best_time_label.text = "Best: " + _format_time(best_lap_time)
-		
-	await get_tree().create_timer(2.0).timeout
-	_load_best_time()
-	
-
-func submit_lap_time_leaderboard(time) -> void:
-	var leaderboard_id = "lap_times"
-	# Zeit in Millisekunden als Integer (z.B. 45.234 Sekunden = 45234)
-	var score = int(time * 1000)
-	
-	var record : NakamaAPI.ApiLeaderboardRecord = await RacingNakamaClient.client.write_leaderboard_record_async(
-		RacingNakamaClient.session,
-		leaderboard_id,
-		score
-	)
-	
-	if record.is_exception():
-		print("An error occurred: %s" % record)
-		return
-	
-	var lap_time = float(record.score) / 1000.0
-	print("New record username %s and score %s (Zeit: %s)" % [record.username, record.score, _format_time(lap_time)])
-
-func _save_best_time():
-	submit_lap_time_leaderboard(current_lap_time)
-
-func _load_best_time():
-	var leaderboard_id = "lap_times"
-	# Hole nur die Top 1 Zeit (deine persönliche Bestzeit oder die globale)
-	var result : NakamaAPI.ApiLeaderboardRecordList = await RacingNakamaClient.client.list_leaderboard_records_async(
-		RacingNakamaClient.session,
-		leaderboard_id,
-		null,
-		null,
-		1
-	)
-	
-	if result.is_exception():
-		print("An error occurred: %s" % result)
-		return
-	
-	if result.records.size() > 0:
-		var record : NakamaAPI.ApiLeaderboardRecord = result.records[0]
-		var lap_time = float(record.score) / 1000.0
-		print("Best Record: %s mit %s" % [record.username, _format_time(lap_time)])
-		best_time_label.text = "Best: " + _format_time(lap_time)
-		best_lap_time = lap_time
