@@ -2,7 +2,7 @@ extends VehicleWheel3D
 
 # Friction-Werte für verschiedene Untergründe
 var friction_values = {
-	"track": 1.00,
+	"track": 2.5,
 	"grass": 0.2,
 }
 
