@@ -30,6 +30,7 @@ func _on_lap_completed(crossing_vehicle: Node3D):
 	else:
 		# Zweite Überquerung = Finish
 		if debug_ui and debug_ui.has_method("finish_lap"):
+			
 			debug_ui.finish_lap()
 		lap_started = false
 		

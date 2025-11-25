@@ -25,6 +25,8 @@ var is_timing: bool = false
 
 func _ready():
 	_create_ui()
+	
+	await get_tree().create_timer(1.0).timeout
 	_load_best_time()
 
 
@@ -178,24 +180,50 @@ func finish_lap():
 		print("Neue Bestzeit!")
 	else:
 		best_time_label.text = "Best: " + _format_time(best_lap_time)
+		
+	await get_tree().create_timer(2.0).timeout
+	_load_best_time()
+	
 
+func submit_lap_time_leaderboard(time) -> void:
+	var leaderboard_id = "lap_times"
+	# Zeit in Millisekunden als Integer (z.B. 45.234 Sekunden = 45234)
+	var score = int(time * 1000)
+	
+	var record : NakamaAPI.ApiLeaderboardRecord = await RacingNakamaClient.client.write_leaderboard_record_async(
+		RacingNakamaClient.session,
+		leaderboard_id,
+		score
+	)
+	
+	if record.is_exception():
+		print("An error occurred: %s" % record)
+		return
+	
+	var lap_time = float(record.score) / 1000.0
+	print("New record username %s and score %s (Zeit: %s)" % [record.username, record.score, _format_time(lap_time)])
 
 func _save_best_time():
-	"""Speichert Bestzeit in User Preferences"""
-	var config = ConfigFile.new()
-	config.set_value("lap_times", "best_time", best_lap_time)
-	config.save("user://lap_times.cfg")
-
+	submit_lap_time_leaderboard(current_lap_time)
 
 func _load_best_time():
-	"""L\u00e4dt Bestzeit aus User Preferences"""
-	var config = ConfigFile.new()
-	var err = config.load("user://lap_times.cfg")
+	var leaderboard_id = "lap_times"
+	# Hole nur die Top 1 Zeit (deine persönliche Bestzeit oder die globale)
+	var result : NakamaAPI.ApiLeaderboardRecordList = await RacingNakamaClient.client.list_leaderboard_records_async(
+		RacingNakamaClient.session,
+		leaderboard_id,
+		null,
+		null,
+		1
+	)
 	
-	if err == OK:
-		best_lap_time = config.get_value("lap_times", "best_time", 0.0)
-		if best_lap_time > 0.0:
-			best_time_label.text = "Best: " + _format_time(best_lap_time)
-			print("Bestzeit geladen: ", _format_time(best_lap_time))
-	else:
-		print("Keine gespeicherte Bestzeit gefunden")
+	if result.is_exception():
+		print("An error occurred: %s" % result)
+		return
+	
+	if result.records.size() > 0:
+		var record : NakamaAPI.ApiLeaderboardRecord = result.records[0]
+		var lap_time = float(record.score) / 1000.0
+		print("Best Record: %s mit %s" % [record.username, _format_time(lap_time)])
+		best_time_label.text = "Best: " + _format_time(lap_time)
+		best_lap_time = lap_time
