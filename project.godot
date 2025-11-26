@@ -24,10 +24,15 @@ RacingNakamaClient="*res://nakama_client.gd"
 
 window/vsync/vsync_mode=0
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/day_and_night_cycle/plugin.cfg")
+
 [global_group]
 
 grass=""
 track=""
+CycleController=""
 
 [input]
 

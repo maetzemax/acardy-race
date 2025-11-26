@@ -42,6 +42,6 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_pg3op")
 
 [node name="Tree1" type="MeshInstance3D"]
-transform = Transform3D(0.6710141, 0, 0, 0, -2.9330957e-08, 0.6710141, 0, -0.6710141, -2.9330957e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_ipky0")
 skeleton = NodePath("")

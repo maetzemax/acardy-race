@@ -18,7 +18,8 @@ func _ready():
 
 
 func _process(delta: float) -> void:
-	current_lap_time += delta
+	if lap_started:
+		current_lap_time += delta
 	
 
 func _on_lap_completed(crossing_vehicle: Node3D):

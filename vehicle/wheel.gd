@@ -1,5 +1,7 @@
 extends VehicleWheel3D
 
+@export var is_back_wheel: bool
+
 # Friction-Werte für verschiedene Untergründe
 var friction_values = {
 	"track": 2.5,
@@ -8,15 +10,9 @@ var friction_values = {
 
 func _physics_process(_delta: float):
 	_handle_friction()
-	
+
 
 func _handle_friction():
-	var surface_type = _detect_surface()
-	var friction = friction_values.get(surface_type)
-	wheel_friction_slip = friction
-
-
-func _detect_surface() -> String:
 	var space_state = get_world_3d().direct_space_state
 	var ray_origin = global_position
 	var ray_end = ray_origin + Vector3.DOWN * 1.0
@@ -29,8 +25,11 @@ func _detect_surface() -> String:
 		if collider:
 			# Prüfe Gruppen
 			if collider.is_in_group("grass"):
-				return "grass"
+				var friction = friction_values.get("grass")
+				wheel_friction_slip = friction * 0.75 if is_back_wheel else friction
 			elif collider.is_in_group("track"):
-				return "track"
-	
-	return "track"  # Default
+				var friction = friction_values.get("track")
+				wheel_friction_slip = friction
+			else:
+				var friction = friction_values.get("track")
+				wheel_friction_slip = friction
