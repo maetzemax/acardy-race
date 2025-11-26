@@ -4,6 +4,7 @@ extends Node3D
 const LEADERBOARD_ID = "lap_times"
 
 static var best_lap_time: float
+static var last_lap_time: float
 
 func _ready():
 	await get_tree().create_timer(1.0).timeout

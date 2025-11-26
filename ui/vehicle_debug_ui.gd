@@ -12,6 +12,7 @@ extends Control
 @onready var steering_bar: ProgressBar
 @onready var lap_time_label: Label
 @onready var best_time_label: Label
+@onready var last_time_label: Label
 
 # Farben
 var color_throttle = Color(0.2, 1.0, 0.2)  # Grün
@@ -50,8 +51,15 @@ func _create_ui():
 	best_time_label = Label.new()
 	best_time_label.add_theme_font_size_override("font_size", 20)
 	best_time_label.add_theme_color_override("font_color", Color.GOLD)
-	best_time_label.text = "Best: --:--"
+	best_time_label.text = "Beste: --:--"
 	lap_vbox.add_child(best_time_label)
+	
+	# Letzte zeit
+	last_time_label = Label.new()
+	last_time_label.add_theme_font_size_override("font_size", 20)
+	last_time_label.add_theme_color_override("font_color", Color.WHITE)
+	last_time_label.text = "Letzte: --:--"
+	lap_vbox.add_child(last_time_label)
 	
 	lap_container.add_child(lap_panel)
 	
@@ -116,7 +124,8 @@ func _process(_delta):
 	else:
 		lap_time_label.text = "Start/Ziel passieren"
 		
-	best_time_label.text = _format_time(laptime_service.best_lap_time)
+	best_time_label.text = "Beste: " + _format_time(laptime_service.best_lap_time)
+	last_time_label.text = "Letzte: " + _format_time(laptime_service.last_lap_time)
 	
 	# Geschwindigkeit in km/h
 	var speed_ms = vehicle.linear_velocity.length()

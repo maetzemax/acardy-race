@@ -32,6 +32,7 @@ func _on_lap_completed(crossing_vehicle: Node3D):
 			laptime_service.best_lap_time = current_lap_time
 			laptime_service.set_leaderboard_laptime(current_lap_time)
 		
+		laptime_service.last_lap_time = current_lap_time
 		current_lap_time = 0
 		
 		await get_tree().create_timer(1.0).timeout
