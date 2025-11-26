@@ -517,8 +517,4 @@ transform = Transform3D(-0.25080156, 0.62238127, 2.720515e-08, 0, -2.9330957e-08
 
 [node name="StaticBody3D" parent="WindigCircuit/Track " index="0" groups=["track"]]
 
-[node name="StaticBody3D" parent="WindigCircuit/Curbes_Outline " index="0" groups=["track"]]
-
-[node name="StaticBody3D" parent="WindigCircuit/Curbes_Inline " index="0" groups=["track"]]
-
 [editable path="WindigCircuit"]
