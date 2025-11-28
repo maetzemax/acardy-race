@@ -43,6 +43,8 @@ func _process(delta):
 	
 	if laptimer.lap_started:
 		lap_time_label.text = _format_time(laptimer.current_lap_time)
+	elif laptimer.is_invalid_time:
+		lap_time_label.text = "Ungültige Zeit"
 	else:
 		lap_time_label.text = "Start/Ziel passieren"
 		

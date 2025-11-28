@@ -158,3 +158,6 @@ func _handle_engine_sound():
 	
 	var target_volume = lerp(min_volume, max_volume, throttle_factor)
 	engine_sound.volume_db = target_volume
+
+func is_off_track() -> bool:
+	return wheel_front_left.is_off_track and wheel_front_right.is_off_track and wheel_rear_left.is_off_track and wheel_rear_right.is_off_track

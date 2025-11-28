@@ -2,6 +2,8 @@ extends VehicleWheel3D
 
 @export var is_back_wheel: bool
 
+var is_off_track = false
+
 # Friction-Werte für verschiedene Untergründe
 var friction_values = {
 	"track": 2.5,
@@ -27,9 +29,12 @@ func _handle_friction():
 			if collider.is_in_group("grass"):
 				var friction = friction_values.get("grass")
 				wheel_friction_slip = friction * 0.75 if is_back_wheel else friction
+				is_off_track = true
 			elif collider.is_in_group("track"):
 				var friction = friction_values.get("track")
 				wheel_friction_slip = friction
+				is_off_track = false
 			else:
 				var friction = friction_values.get("track")
 				wheel_friction_slip = friction
+				is_off_track = false
