@@ -347,7 +347,7 @@ layout_mode = 2
 [node name="BestTimeTitle" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Beste Rundenzeit:"
+text = "GLOBAL BEST:"
 
 [node name="BestTimeLabel" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -357,7 +357,7 @@ text = "0:47.321"
 [node name="LocalBestTitle" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Lokale Rundenzeit:"
+text = "PERSONAL BEST:"
 
 [node name="LocalBestLabel" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -367,7 +367,7 @@ text = "0:47.321"
 [node name="LastTimeTitle" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Letzte Rundenzeit:"
+text = "LAST:"
 
 [node name="LastTimeLabel" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
