@@ -1,5 +1,6 @@
-[gd_scene load_steps=35 format=4 uid="uid://un1xgkhi1vmp"]
+[gd_scene load_steps=38 format=4 uid="uid://un1xgkhi1vmp"]
 
+[ext_resource type="Script" uid="uid://bbl8eg0jx6typ" path="res://multiplayer_manager.gd" id="1_cegan"]
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="1_yaehf"]
 [ext_resource type="Resource" uid="uid://cvxw651qwja6o" path="res://addons/day_and_night_cycle/presets/sky_cover/sky_cover_day_cycle.tres" id="2_074og"]
 [ext_resource type="Script" uid="uid://cc23jnt5cf5bs" path="res://camera/follow_camera.gd" id="2_h2yge"]
@@ -11,7 +12,9 @@
 [ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://car.tscn" id="6_vivmo"]
 [ext_resource type="Script" uid="uid://p7wdtvnuik6k" path="res://ui/half_circle_gauge.gd" id="7_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://x67th36qxib8" path="res://assets/trees/tree_2.tscn" id="8_efxa6"]
+[ext_resource type="Script" uid="uid://dwn5iw5n5k2lx" path="res://join_button.gd" id="9_074og"]
 [ext_resource type="PackedScene" uid="uid://b1nqw28yyul3y" path="res://assets/trees/tree_1.tscn" id="9_dg77c"]
+[ext_resource type="Script" uid="uid://bmovdhneyu04e" path="res://create_match_button.gd" id="9_yaehf"]
 [ext_resource type="PackedScene" uid="uid://dcxtxmgptjavb" path="res://assets/trees/tree_3.tscn" id="10_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://bn8ioo8001p7y" path="res://assets/trees/tree_4.tscn" id="11_w48qg"]
 [ext_resource type="Script" uid="uid://lplmeembexqu" path="res://laptime_service.gd" id="13_ycdy4"]
@@ -177,6 +180,12 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_tgtu5")
 
 [node name="Main" type="Node3D"]
+
+[node name="MultiplayerManager" type="Node3D" parent="." node_paths=PackedStringArray("local_player")]
+script = ExtResource("1_cegan")
+player_vehicle_scene = ExtResource("6_vivmo")
+local_player = NodePath("../VehicleBody3D")
+spawn_offset = Vector3(0, 0, 0)
 
 [node name="CycleController" type="Node3D" parent="." node_paths=PackedStringArray("world_environment", "sun_light") groups=["CycleController"]]
 script = ExtResource("1_yaehf")
@@ -381,6 +390,43 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("5_272bh")
 vehicle = NodePath("../../VehicleBody3D")
+
+[node name="CreateMatch" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/CreateMatch"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -124.0
+offset_top = -20.0
+offset_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/margin_right = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CreateMatch/MarginContainer"]
+layout_mode = 2
+
+[node name="Join" type="Button" parent="CanvasLayer/CreateMatch/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Join"
+script = ExtResource("9_074og")
+
+[node name="Create" type="Button" parent="CanvasLayer/CreateMatch/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Create Match"
+script = ExtResource("9_yaehf")
 
 [node name="StartFinish" parent="." instance=ExtResource("5_7mycd")]
 transform = Transform3D(0.47769555, 0, -0.8785255, 0, 1, 0, 0.8785255, 0, 0.47769555, -18.327768, 7.0625916, 7.9947166)
@@ -2113,5 +2159,6 @@ transform = Transform3D(-0.39073086, 0.015139287, -0.9203803, -1.3969839e-09, 0.
 
 [node name="VehicleBody3D" parent="." instance=ExtResource("6_vivmo")]
 transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, 0, 4.357322, 0)
+engine_vibration_strength = 0.05
 
 [editable path="WindigCircuit"]

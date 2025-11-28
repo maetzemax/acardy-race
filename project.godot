@@ -13,12 +13,14 @@ config_version=5
 config/name="acardy-race"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+boot_splash/image="uid://dk6emryv0sq62"
+config/icon="uid://hxx18wkpkp4g"
 
 [autoload]
 
 Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
 RacingNakamaClient="*res://nakama_client.gd"
+MultiplayerService="*res://multiplayer_service.gd"
 
 [display]
 
