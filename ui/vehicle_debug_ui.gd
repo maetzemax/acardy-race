@@ -41,7 +41,9 @@ func _process(delta):
 	_maybe_trigger_delta_flash(laptime_service.current_delta)
 	_update_delta_visibility(delta)
 	
-	if laptimer.lap_started:
+	if laptimer.is_invalid_time:
+		lap_time_label.text = "Ungültige Zeit"
+	elif laptimer.lap_started:
 		lap_time_label.text = _format_time(laptimer.current_lap_time)
 	else:
 		lap_time_label.text = "Start/Ziel passieren"
