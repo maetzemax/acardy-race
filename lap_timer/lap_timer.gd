@@ -1,9 +1,6 @@
 extends Node
 
-## Lap Timer Manager - verbindet Checkpoints mit UI
-
 @export var laptime_service: LaptimeService
-
 @export var vehicle: VehicleBody3D
 
 var current_sector_times: Array[float]
@@ -66,7 +63,8 @@ func _on_lap_completed(crossing_vehicle: Node3D):
 					laptime_service.best_lap_time = current_lap_time
 					laptime_service.set_leaderboard_laptime(current_lap_time)
 		
-		laptime_service.last_lap_time = current_lap_time
+			laptime_service.last_lap_time = current_lap_time
+		
 		current_lap_time = 0
 		current_sector_times = []
 		all_sectors_passed = false
