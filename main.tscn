@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=4 uid="uid://un1xgkhi1vmp"]
+[gd_scene load_steps=35 format=4 uid="uid://un1xgkhi1vmp"]
 
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="1_yaehf"]
 [ext_resource type="Resource" uid="uid://cvxw651qwja6o" path="res://addons/day_and_night_cycle/presets/sky_cover/sky_cover_day_cycle.tres" id="2_074og"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://ctmpu61ifjnvd" path="res://lap_timer/lap_checkpoint.tscn" id="5_7mycd"]
 [ext_resource type="Script" uid="uid://cqs6x14modxj" path="res://ui/input_settings_ui.gd" id="5_272bh"]
 [ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://car.tscn" id="6_vivmo"]
+[ext_resource type="Script" uid="uid://p7wdtvnuik6k" path="res://ui/half_circle_gauge.gd" id="7_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://x67th36qxib8" path="res://assets/trees/tree_2.tscn" id="8_efxa6"]
 [ext_resource type="PackedScene" uid="uid://b1nqw28yyul3y" path="res://assets/trees/tree_1.tscn" id="9_dg77c"]
 [ext_resource type="PackedScene" uid="uid://dcxtxmgptjavb" path="res://assets/trees/tree_3.tscn" id="10_ycdy4"]
@@ -60,6 +61,11 @@ fog_density = 0.001
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.01
 volumetric_fog_length = 128.0
+
+[sub_resource type="Gradient" id="Gradient_2cqfq"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1)
+metadata/_snap_enabled = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vivmo"]
 bg_color = Color(0.14117648, 0.7137255, 0.29411766, 1)
@@ -203,7 +209,7 @@ default_offset = Vector3(0, 3, -6)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Debug" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("laptime_service", "laptimer", "vehicle", "speed_label", "throttle_bar", "brake_bar", "steering_bar", "lap_time_label", "best_time_label", "local_best_time_label", "last_time_label", "delta_label")]
+[node name="Debug" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("laptime_service", "laptimer", "vehicle", "speed_label", "speed_gauge", "throttle_bar", "brake_bar", "steering_bar", "lap_time_label", "best_time_label", "local_best_time_label", "last_time_label", "delta_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -214,7 +220,8 @@ script = ExtResource("4_1bvp3")
 laptime_service = NodePath("../../LaptimeService")
 laptimer = NodePath("../../Laptimer")
 vehicle = NodePath("../../VehicleBody3D")
-speed_label = NodePath("Tachometer/MarginContainer2/VBoxContainer/Speed Label")
+speed_label = NodePath("Tachometer/MarginContainer2/VBoxContainer/MarginContainer/Speed Label")
+speed_gauge = NodePath("Tachometer/MarginContainer2/VBoxContainer/MarginContainer/HalfCircleGauge")
 throttle_bar = NodePath("Tachometer/MarginContainer2/VBoxContainer/ThrottleBar")
 brake_bar = NodePath("Tachometer/MarginContainer2/VBoxContainer/BrakeBar")
 steering_bar = NodePath("Tachometer/MarginContainer2/VBoxContainer/Steering")
@@ -223,6 +230,7 @@ best_time_label = NodePath("MarginContainer/MarginContainer/VBoxContainer/BestTi
 local_best_time_label = NodePath("MarginContainer/MarginContainer/VBoxContainer/LocalBestLabel")
 last_time_label = NodePath("MarginContainer/MarginContainer/VBoxContainer/LastTimeLabel")
 delta_label = NodePath("Laptime/VBoxContainer/Delta")
+max_speed_display = 200.0
 
 [node name="Laptime" type="MarginContainer" parent="CanvasLayer/Debug"]
 layout_mode = 1
@@ -279,11 +287,25 @@ theme_override_constants/margin_bottom = 12
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Speed Label" type="Label" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer"]
 layout_mode = 2
+
+[node name="HalfCircleGauge" type="Control" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(260, 140)
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("7_2cqfq")
+max_value = 250.0
+fill_gradient = SubResource("Gradient_2cqfq")
+
+[node name="Speed Label" type="Label" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
 theme_override_font_sizes/font_size = 48
 text = "100"
 horizontal_alignment = 1
+vertical_alignment = 2
 
 [node name="ThrottleBar" type="ProgressBar" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(320, 40)

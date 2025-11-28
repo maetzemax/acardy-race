@@ -7,6 +7,7 @@ extends Control
 
 # UI Elemente
 @export var speed_label: Label
+@export var speed_gauge: HalfCircleGauge
 @export var throttle_bar: ProgressBar
 @export var brake_bar: ProgressBar
 @export var steering_bar: ProgressBar
@@ -15,6 +16,8 @@ extends Control
 @export var local_best_time_label: Label
 @export var last_time_label: Label
 @export var delta_label: Label
+
+@export var max_speed_display: float = 350.0
 
 var delta_display_timer: float = 0.0
 var delta_initialized: bool = false
@@ -51,7 +54,10 @@ func _process(delta):
 	# Geschwindigkeit in km/h
 	var speed_ms = vehicle.linear_velocity.length()
 	var speed_kmh = speed_ms * 3.6
-	speed_label.text = "%d km/h" % speed_kmh
+	speed_label.text = "%d" % speed_kmh
+	if speed_gauge:
+		speed_gauge.max_value = max_speed_display
+		speed_gauge.value = clamp(speed_kmh, 0.0, max_speed_display)
 	
 	# Farbe basierend auf Geschwindigkeit
 	if speed_kmh < 100:
