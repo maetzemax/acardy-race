@@ -20,6 +20,7 @@ config/icon="uid://hxx18wkpkp4g"
 
 Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
 RacingNakamaClient="*res://nakama_client.gd"
+MultiplayerService="*res://multiplayer_service.gd"
 
 [display]
 
