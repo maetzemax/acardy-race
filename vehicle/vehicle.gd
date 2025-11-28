@@ -44,6 +44,10 @@ var downforce: Vector3
 @export var collision_vibration_duration: float = 0.3
 @export var offroad_vibration_strength: float = 0.4
 
+@export_group("Multiplayer")
+@export var is_remote_player: bool = false
+@export var position_send_rate: float = 0.05  # Send position every 50ms
+
 # Input Deadzones
 var input_steering_deadzone: float = 0.0
 var input_accelerate_deadzone: float = 0.0
@@ -54,8 +58,21 @@ var brake_strength: float = 0.0
 var collision_vibration_timer: float = 0.0
 var last_collision_impulse: float = 0.0
 
+# Multiplayer state
+var position_send_timer: float = 0.0
+var multiplayer_service: Node = null
+
+
+func _ready():
+	# Find multiplayer service in scene
+	multiplayer_service = get_tree().root.find_child("MultiplayerService", true, false)
+
 
 func _physics_process(delta: float):
+	# Remote players don't handle input
+	if is_remote_player:
+		return
+	
 	for wheel in [wheel_front_left, wheel_front_right]:
 		wheel.suspension_stiffness = suspension_stiff_value
 		
@@ -68,6 +85,7 @@ func _physics_process(delta: float):
 	_handle_brake()
 	_handle_engine_sound()
 	_handle_controller_vibration(delta)
+	_handle_multiplayer_sync(delta)
 
 
 func _handle_vehicle_control(delta):
@@ -208,3 +226,21 @@ func _handle_controller_vibration(delta: float):
 	var engine_rumble = (throttle_vibration * 0.7) + (rpm_factor * engine_vibration_strength * 0.3)
 	
 	Input.start_joy_vibration(0, engine_rumble * 0.5, engine_rumble * 0.3, delta)
+
+
+func _handle_multiplayer_sync(delta: float):
+	if not multiplayer_service or is_remote_player:
+		return
+	
+	# Send position updates at configured rate
+	position_send_timer += delta
+	if position_send_timer >= position_send_rate:
+		position_send_timer = 0.0
+		multiplayer_service.send_player_position(global_position, global_rotation)
+
+
+func update_remote_state(new_position: Vector3, new_rotation: Vector3):
+	# Smoothly interpolate to new position for remote players
+	if is_remote_player:
+		global_position = global_position.lerp(new_position, 0.3)
+		global_rotation = global_rotation.lerp(new_rotation, 0.3)
