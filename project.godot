@@ -15,14 +15,27 @@ run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
+RacingNakamaClient="*res://nakama_client.gd"
+
 [display]
 
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=3
 window/vsync/vsync_mode=0
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/day_and_night_cycle/plugin.cfg")
 
 [global_group]
 
 grass=""
 track=""
+CycleController=""
 
 [input]
 
