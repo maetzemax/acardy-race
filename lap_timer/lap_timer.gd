@@ -69,6 +69,7 @@ func _on_lap_completed(crossing_vehicle: Node3D):
 		current_lap_time = 0
 		current_sector_times = []
 		all_sectors_passed = false
+		is_invalid_time = false
 		
 		await get_tree().create_timer(1.0).timeout
 		laptime_service.load_best_time()
