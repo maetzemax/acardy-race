@@ -23,7 +23,6 @@ var delta_display_timer: float = 0.0
 var delta_initialized: bool = false
 var last_delta_value: float = 0.0
 
-
 func _ready():
 	if delta_label:
 		delta_label.visible = false
@@ -58,14 +57,6 @@ func _process(delta):
 	if speed_gauge:
 		speed_gauge.max_value = max_speed_display
 		speed_gauge.value = clamp(speed_kmh, 0.0, max_speed_display)
-	
-	# Farbe basierend auf Geschwindigkeit
-	if speed_kmh < 100:
-		speed_label.add_theme_color_override("font_color", Color.WHITE)
-	elif speed_kmh < 150:
-		speed_label.add_theme_color_override("font_color", Color.YELLOW)
-	else:
-		speed_label.add_theme_color_override("font_color", Color.RED)
 	
 	delta_label.text = ("+" if laptime_service.current_delta > 0 else "-") + _format_time(abs(laptime_service.current_delta))
 	
