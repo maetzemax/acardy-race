@@ -2113,5 +2113,6 @@ transform = Transform3D(-0.39073086, 0.015139287, -0.9203803, -1.3969839e-09, 0.
 
 [node name="VehicleBody3D" parent="." instance=ExtResource("6_vivmo")]
 transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, 0, 4.357322, 0)
+engine_vibration_strength = 0.05
 
 [editable path="WindigCircuit"]
