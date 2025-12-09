@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="acardy-race"
-run/main_scene="res://main.tscn"
+run/main_scene="uid://cuxsom1083lt7"
 config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/image="uid://dk6emryv0sq62"
 config/icon="uid://hxx18wkpkp4g"
@@ -19,8 +19,8 @@ config/icon="uid://hxx18wkpkp4g"
 [autoload]
 
 Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
-RacingNakamaClient="*res://nakama_client.gd"
-MultiplayerService="*res://multiplayer_service.gd"
+MultiplayerService="*res://multiplayer/multiplayer_service.gd"
+RacingNakamaClient="*res://api/nakama_client.gd"
 
 [display]
 
