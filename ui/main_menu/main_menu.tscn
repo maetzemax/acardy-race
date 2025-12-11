@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://7rifa2h88dt3" path="res://ui/main_menu/main_menu_ui.gd" id="2_j5v2v"]
 [ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/car.tscn" id="2_jix8l"]
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="3_0k4wn"]
-[ext_resource type="Script" uid="uid://dtspxlqtx4urm" path="res://ui/core/navigation_button.gd" id="3_glbon"]
 [ext_resource type="Theme" uid="uid://dh2bm71ea5l7o" path="res://ui/themes/main_theme.tres" id="3_jix8l"]
 [ext_resource type="Script" uid="uid://dewxelljqmeae" path="res://ui/main_menu/leaderboard_ui.gd" id="4_iotk1"]
 [ext_resource type="Resource" uid="uid://cvxw651qwja6o" path="res://addons/day_and_night_cycle/presets/sky_cover/sky_cover_day_cycle.tres" id="4_j5v2v"]
@@ -13,6 +12,37 @@
 [ext_resource type="PackedScene" uid="uid://b1nqw28yyul3y" path="res://assets/trees/tree_1.tscn" id="7_cm266"]
 [ext_resource type="PackedScene" uid="uid://dcxtxmgptjavb" path="res://assets/trees/tree_3.tscn" id="8_g8g3n"]
 [ext_resource type="PackedScene" uid="uid://bn8ioo8001p7y" path="res://assets/trees/tree_4.tscn" id="9_8u0te"]
+
+[sub_resource type="GDScript" id="GDScript_xio0d"]
+script/source = "extends Button
+
+enum NAVIGATION_DESTINATION {
+	MAIN,
+	MENU,
+	QUIT,
+}
+
+const MAIN = preload(\"uid://un1xgkhi1vmp\")
+const MENU = preload(\"uid://cuxsom1083lt7\")
+
+@export var destination: NAVIGATION_DESTINATION
+
+var font_size: int = 48
+
+func _ready() -> void:
+	pressed.connect(_on_pressed)
+	add_theme_font_size_override(\"font_size\", font_size)
+	
+
+func _on_pressed():
+	match destination:
+		NAVIGATION_DESTINATION.MAIN:
+			get_tree().change_scene_to_packed(MAIN)
+		NAVIGATION_DESTINATION.MENU:
+			get_tree().change_scene_to_packed(MENU)
+		NAVIGATION_DESTINATION.QUIT:
+			get_tree().quit()
+"
 
 [sub_resource type="Gradient" id="Gradient_oiatc"]
 offsets = PackedFloat32Array(0, 0.1, 0.5, 0.9, 1)
@@ -162,7 +192,7 @@ shadow_mesh = SubResource("ArrayMesh_tgtu5")
 [node name="Main Menu" type="Node3D"]
 
 [node name="MenuCamera" type="Camera3D" parent="."]
-transform = Transform3D(-0.9848014, -0.0044463575, -0.17362687, -0.0017451129, 0.99987507, -0.015707318, 0.17367503, -0.015165591, -0.9846862, -10.692153, 4.546669, 65.04353)
+transform = Transform3D(-0.9848076, -0.12278788, -0.12278788, 0, 0.7071067, -0.7071067, 0.17364828, -0.69636416, -0.69636416, -10.692153, 4.546669, 65.04353)
 
 [node name="CanvasGroup" type="CanvasLayer" parent="."]
 
@@ -194,13 +224,13 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "START"
-script = ExtResource("3_glbon")
+script = SubResource("GDScript_xio0d")
 metadata/_custom_type_script = "uid://dtspxlqtx4urm"
 
 [node name="LeaderboardButton" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "LEADERBORD"
+text = "LEADERBOARD"
 
 [node name="OptionsButton" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
 layout_mode = 2
@@ -211,7 +241,7 @@ text = "OPTIONS"
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "EXIT"
-script = ExtResource("3_glbon")
+script = SubResource("GDScript_xio0d")
 destination = 2
 metadata/_custom_type_script = "uid://dtspxlqtx4urm"
 
@@ -264,7 +294,7 @@ horizontal_alignment = 1
 [node name="LapTimeList" type="VBoxContainer" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
 custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="Back" type="Button" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
@@ -2006,6 +2036,9 @@ axis_lock_linear_z = true
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
+min_volume = -1000.0
+max_volume = -1000.0
+vibration_enabled = false
 engine_vibration_strength = 0.05
 
 [editable path="WindigCircuit"]

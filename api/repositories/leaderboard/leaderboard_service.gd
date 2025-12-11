@@ -7,11 +7,12 @@ static var best_lap_time: float
 static var last_lap_time: float
 
 static var current_delta: float
-static var best_sector_times: Array[float]
+static var best_sector_times
+
 
 func _ready():
 	await get_tree().create_timer(1.0).timeout
-	load_best_time()
+	get_global_best_time()
 	get_personal_best_time()
 
 
@@ -22,7 +23,7 @@ func set_leaderboard_laptime(lap_time: float, sector_times: Array[float]):
 		"sector_times": sector_times
 	}
 	
-	var record : NakamaAPI.ApiLeaderboardRecord = await RacingNakamaClient.client.write_leaderboard_record_async(
+	var record: NakamaAPI.ApiLeaderboardRecord = await RacingNakamaClient.client.write_leaderboard_record_async(
 		RacingNakamaClient.session,
 		LEADERBOARD_ID,
 		score,
@@ -35,32 +36,35 @@ func set_leaderboard_laptime(lap_time: float, sector_times: Array[float]):
 		return
 
 
-func get_personal_best_time():
-	var account: NakamaAPI.ApiAccount = await RacingNakamaClient.client.get_account_async(RacingNakamaClient.session)
-
-	if account.is_exception():
-		print("An error occurred: %s" % account)
-		return
-
-	var user = account.user
-	print("User id '%s' and username '%s'." % [user.id, user.username])
-	
-	var result: NakamaAPI.ApiLeaderboardRecordList = await  RacingNakamaClient.client.list_leaderboard_records_around_owner_async(
+func get_personal_best_time() -> LeaderboardEntry:
+	var result: NakamaAPI.ApiLeaderboardRecordList = await RacingNakamaClient.client.list_leaderboard_records_around_owner_async(
 		RacingNakamaClient.session,
 		LEADERBOARD_ID,
-		user.id,
+		RacingNakamaClient.user.id,
 		null,
 		1,
 		null
 	)
-	
-	if result.records.size() > 0:
-		var record : NakamaAPI.ApiLeaderboardRecord = result.records[0]
-		var lap_time = float(record.score) / 1000.0
-		local_best_lap_time = lap_time
 
-func load_best_time():
-	var result : NakamaAPI.ApiLeaderboardRecordList = await RacingNakamaClient.client.list_leaderboard_records_async(
+	if result.records.size() == 0:
+		return null
+	
+	var record : NakamaAPI.ApiLeaderboardRecord = result.records[0]
+	
+	var lap_time = float(record.score) / 1000.0
+	local_best_lap_time = lap_time
+	var username = record.username
+
+	var json = JSON.new()
+	json.parse(record.metadata)
+	var sector_times = json.data.get("sector_times", [])
+	best_sector_times = sector_times
+	
+	return LeaderboardEntry.new(lap_time, username, sector_times)
+
+
+func get_global_best_time() -> LeaderboardEntry:
+	var result: NakamaAPI.ApiLeaderboardRecordList = await RacingNakamaClient.client.list_leaderboard_records_async(
 		RacingNakamaClient.session,
 		LEADERBOARD_ID,
 		null,
@@ -70,16 +74,25 @@ func load_best_time():
 	
 	if result.is_exception():
 		print("An error occurred: %s" % result)
-		return
+		return null
 	
-	if result.records.size() > 0:
-		var record : NakamaAPI.ApiLeaderboardRecord = result.records[0]
-		var lap_time = float(record.score) / 1000.0
-		best_lap_time = lap_time
+	if result.records.size() == 0:
+		return null
+	
+	var record: NakamaAPI.ApiLeaderboardRecord = result.records[0]
+	var lap_time = float(record.score) / 1000.0
+	best_lap_time = lap_time
+	var username = record.username
+
+	var json = JSON.new()
+	json.parse(record.metadata)
+	var sector_times = json.data.get("sector_times", [])
+	
+	return LeaderboardEntry.new(lap_time, username, sector_times)
 
 
-func load_best_times(limit = 20) -> Dictionary:
-	var result : NakamaAPI.ApiLeaderboardRecordList = await RacingNakamaClient.client.list_leaderboard_records_async(
+func get_global_best_times(limit = 5) -> Array[LeaderboardEntry]:
+	var result: NakamaAPI.ApiLeaderboardRecordList = await RacingNakamaClient.client.list_leaderboard_records_async(
 		RacingNakamaClient.session,
 		LEADERBOARD_ID,
 		null,
@@ -89,12 +102,18 @@ func load_best_times(limit = 20) -> Dictionary:
 	
 	if result.is_exception():
 		print("An error occurred: %s" % result)
-		return {}
+		return []
 	
-	var times: Dictionary = {}
+	var times: Array[LeaderboardEntry] = []
 	
 	for record in result.records:
 		var time = float(record.score) / 1000
-		times[record.username] = time
+		var username = record.username
+		
+		var json = JSON.new()
+		json.parse(record.metadata)
+		var sector_times = json.data.get("sector_times", [])
+		
+		times.append(LeaderboardEntry.new(time, username, sector_times))
 	
 	return times

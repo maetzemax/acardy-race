@@ -9,6 +9,7 @@ var all_sectors_passed: bool = false
 
 var checkpoints
 
+
 func _ready():
 	checkpoints = get_tree().get_nodes_in_group("lap_checkpoints")
 	
@@ -50,9 +51,8 @@ func _on_lap_completed(crossing_vehicle: Node3D):
 	if not lap_started:
 		lap_started = true
 	else:
-		LeaderboardService.current_delta = current_lap_time - LeaderboardService.local_best_lap_time
-		
 		if not is_invalid_time and all_sectors_passed:
+			LeaderboardService.current_delta = current_lap_time - LeaderboardService.local_best_lap_time
 			if current_lap_time < LeaderboardService.local_best_lap_time or not LeaderboardService.local_best_lap_time:
 				LeaderboardService.local_best_lap_time = current_lap_time
 				LeaderboardService.best_sector_times = current_sector_times
@@ -68,6 +68,3 @@ func _on_lap_completed(crossing_vehicle: Node3D):
 		current_sector_times = []
 		all_sectors_passed = false
 		is_invalid_time = false
-		
-		await get_tree().create_timer(1.0).timeout
-		LeaderboardService.load_best_time()

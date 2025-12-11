@@ -27,7 +27,7 @@ LeaderboardService="*res://api/repositories/leaderboard/leaderboard_service.gd"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/size/mode=3
+window/stretch/aspect="ignore"
 window/vsync/vsync_mode=0
 
 [editor_plugins]
