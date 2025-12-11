@@ -19,8 +19,9 @@ config/icon="uid://hxx18wkpkp4g"
 [autoload]
 
 Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
+RacingNakamaClient="*res://api/racing_nakama_client.gd"
 MultiplayerService="*res://multiplayer/multiplayer_service.gd"
-RacingNakamaClient="*res://api/nakama_client.gd"
+LeaderboardService="*res://api/repositories/leaderboard/leaderboard_service.gd"
 
 [display]
 
@@ -36,6 +37,7 @@ enabled=PackedStringArray("res://addons/day_and_night_cycle/plugin.cfg")
 [file_customization]
 
 folder_colors={
+"res://api/": "red",
 "res://ui/": "blue"
 }
 

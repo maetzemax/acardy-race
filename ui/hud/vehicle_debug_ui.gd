@@ -1,7 +1,6 @@
 extends Control
 
 ## Debug UI für Fahrzeug-Informationen
-@export var laptime_service: LaptimeService
 @export var laptimer: Node3D
 @export var vehicle: VehicleBody3D
 
@@ -35,10 +34,10 @@ func _input(event):
 
 
 func _process(delta):
-	if vehicle == null or laptime_service == null:
+	if vehicle == null:
 		return
 
-	_maybe_trigger_delta_flash(laptime_service.current_delta)
+	_maybe_trigger_delta_flash(LeaderboardService.current_delta)
 	_update_delta_visibility(delta)
 	
 	if laptimer.is_invalid_time:
@@ -48,9 +47,9 @@ func _process(delta):
 	else:
 		lap_time_label.text = "Start/Ziel passieren"
 		
-	best_time_label.text = _format_time(laptime_service.best_lap_time)
-	last_time_label.text = _format_time(laptime_service.last_lap_time)
-	local_best_time_label.text = _format_time(laptime_service.local_best_lap_time)
+	best_time_label.text = _format_time(LeaderboardService.best_lap_time)
+	last_time_label.text = _format_time(LeaderboardService.last_lap_time)
+	local_best_time_label.text = _format_time(LeaderboardService.local_best_lap_time)
 	
 	# Geschwindigkeit in km/h
 	var speed_ms = vehicle.linear_velocity.length()
@@ -60,11 +59,11 @@ func _process(delta):
 		speed_gauge.max_value = max_speed_display
 		speed_gauge.value = clamp(speed_kmh, 0.0, max_speed_display)
 	
-	delta_label.text = ("+" if laptime_service.current_delta > 0 else "-") + _format_time(abs(laptime_service.current_delta))
+	delta_label.text = ("+" if LeaderboardService.current_delta > 0 else "-") + _format_time(abs(LeaderboardService.current_delta))
 	
-	if laptime_service.current_delta < 0:
+	if LeaderboardService.current_delta < 0:
 		delta_label.add_theme_color_override("font_color", Color.GREEN)
-	elif laptime_service.current_delta > 0:
+	elif LeaderboardService.current_delta > 0:
 		delta_label.add_theme_color_override("font_color", Color.RED)
 	else:
 		delta_label.add_theme_color_override("font_color", Color.WHITE)

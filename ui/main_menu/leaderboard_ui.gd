@@ -1,7 +1,5 @@
 extends Control
 
-@export var laptime_service: LaptimeService
-
 @onready var lap_time_list: VBoxContainer = $VBoxContainer/LapTimeList
 
 var _lap_times: Dictionary = {}
@@ -9,7 +7,7 @@ var _lap_times: Dictionary = {}
 
 func _ready():
 	await get_tree().create_timer(1.0).timeout
-	_lap_times = await laptime_service.load_best_times(5)
+	_lap_times = await LeaderboardService.load_best_times(5)
 	
 	if _lap_times.size() < 1:
 		var label = Label.new()
