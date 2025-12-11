@@ -1,4 +1,3 @@
-class_name LaptimeService
 extends Node3D
 
 const LEADERBOARD_ID = "lap_times"
@@ -13,22 +12,30 @@ static var best_sector_times: Array[float]
 func _ready():
 	await get_tree().create_timer(1.0).timeout
 	load_best_time()
-	load_personal_best_time()
+	get_personal_best_time()
 
-func set_leaderboard_laptime(time):
-	var score = int(time * 1000)
+
+func set_leaderboard_laptime(lap_time: float, sector_times: Array[float]):
+	var score = int(lap_time * 1000)
+	
+	var metadata = {
+		"sector_times": sector_times
+	}
 	
 	var record : NakamaAPI.ApiLeaderboardRecord = await RacingNakamaClient.client.write_leaderboard_record_async(
 		RacingNakamaClient.session,
 		LEADERBOARD_ID,
-		score
+		score,
+		0,
+		JSON.stringify(metadata)
 	)
 	
 	if record.is_exception():
 		print("An error occurred: %s" % record)
 		return
 
-func load_personal_best_time():
+
+func get_personal_best_time():
 	var account: NakamaAPI.ApiAccount = await RacingNakamaClient.client.get_account_async(RacingNakamaClient.session)
 
 	if account.is_exception():
@@ -69,3 +76,25 @@ func load_best_time():
 		var record : NakamaAPI.ApiLeaderboardRecord = result.records[0]
 		var lap_time = float(record.score) / 1000.0
 		best_lap_time = lap_time
+
+
+func load_best_times(limit = 20) -> Dictionary:
+	var result : NakamaAPI.ApiLeaderboardRecordList = await RacingNakamaClient.client.list_leaderboard_records_async(
+		RacingNakamaClient.session,
+		LEADERBOARD_ID,
+		null,
+		null,
+		limit
+	)
+	
+	if result.is_exception():
+		print("An error occurred: %s" % result)
+		return {}
+	
+	var times: Dictionary = {}
+	
+	for record in result.records:
+		var time = float(record.score) / 1000
+		times[record.username] = time
+	
+	return times
