@@ -9,6 +9,7 @@ var all_sectors_passed: bool = false
 
 var checkpoints
 
+
 func _ready():
 	checkpoints = get_tree().get_nodes_in_group("lap_checkpoints")
 	
@@ -67,6 +68,3 @@ func _on_lap_completed(crossing_vehicle: Node3D):
 		current_sector_times = []
 		all_sectors_passed = false
 		is_invalid_time = false
-		
-		await get_tree().create_timer(1.0).timeout
-		LeaderboardService.load_best_time()
