@@ -1,6 +1,7 @@
-[gd_scene load_steps=26 format=4 uid="uid://cuxsom1083lt7"]
+[gd_scene load_steps=27 format=4 uid="uid://cuxsom1083lt7"]
 
 [ext_resource type="PackedScene" uid="uid://d115gn4krhqf5" path="res://assets/tracks/WindigCircuit.glb" id="1_fu7sn"]
+[ext_resource type="Script" uid="uid://7rifa2h88dt3" path="res://main_menu_ui.gd" id="2_j5v2v"]
 [ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/car.tscn" id="2_jix8l"]
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="3_0k4wn"]
 [ext_resource type="Script" uid="uid://dtspxlqtx4urm" path="res://start_button.gd" id="3_glbon"]
@@ -159,9 +160,12 @@ shadow_mesh = SubResource("ArrayMesh_tgtu5")
 
 [node name="Main Menu" type="Node3D"]
 
+[node name="MenuCamera" type="Camera3D" parent="."]
+transform = Transform3D(-0.9848014, -0.0044463575, -0.17362687, -0.0017451129, 0.99987507, -0.015707318, 0.17367503, -0.015165591, -0.9846862, -10.692153, 4.546669, 65.04353)
+
 [node name="CanvasGroup" type="CanvasLayer" parent="."]
 
-[node name="UI" type="Control" parent="CanvasGroup"]
+[node name="UI" type="Control" parent="CanvasGroup" node_paths=PackedStringArray("camera")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -169,8 +173,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("3_jix8l")
+script = ExtResource("2_j5v2v")
+camera = NodePath("../../MenuCamera")
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasGroup/UI"]
+[node name="Menu" type="CenterContainer" parent="CanvasGroup/UI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -178,30 +184,85 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasGroup/UI/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasGroup/UI/Menu"]
 custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="StartButton" type="Button" parent="CanvasGroup/UI/CenterContainer/VBoxContainer"]
+[node name="StartButton" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "START"
 script = ExtResource("3_glbon")
 metadata/_custom_type_script = "uid://dtspxlqtx4urm"
 
-[node name="Options" type="Button" parent="CanvasGroup/UI/CenterContainer/VBoxContainer"]
+[node name="LeaderboardButton" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "LEADERBORD"
+
+[node name="OptionsButton" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "OPTIONS"
 
-[node name="Exit" type="Button" parent="CanvasGroup/UI/CenterContainer/VBoxContainer"]
+[node name="Exit" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "EXIT"
 script = ExtResource("3_glbon")
 destination = 2
 metadata/_custom_type_script = "uid://dtspxlqtx4urm"
+
+[node name="Options" type="CenterContainer" parent="CanvasGroup/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasGroup/UI/Options"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="CanvasGroup/UI/Options/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "WORK IN PROGRESS"
+horizontal_alignment = 1
+
+[node name="Back" type="Button" parent="CanvasGroup/UI/Options/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "BACK"
+
+[node name="Leaderboard" type="CenterContainer" parent="CanvasGroup/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasGroup/UI/Leaderboard"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "WORK IN PROGRESS"
+horizontal_alignment = 1
+
+[node name="Back" type="Button" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "BACK"
 
 [node name="CycleController" type="Node3D" parent="." node_paths=PackedStringArray("world_environment", "sun_light") groups=["CycleController"]]
 script = ExtResource("3_0k4wn")
@@ -221,9 +282,6 @@ shadow_enabled = true
 shadow_blur = 0.5
 directional_shadow_split_3 = 0.25
 directional_shadow_max_distance = 250.0
-
-[node name="MenuCamera" type="Camera3D" parent="."]
-transform = Transform3D(-0.9900916, -0.003540504, -0.14037785, -0.0014398433, 0.99988556, -0.015063092, 0.14041512, -0.01471172, -0.98998344, -10.692153, 4.546669, 65.04353)
 
 [node name="Environment" type="Node3D" parent="."]
 
