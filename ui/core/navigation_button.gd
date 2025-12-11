@@ -8,9 +8,6 @@ enum NAVIGATION_DESTINATION {
 	QUIT,
 }
 
-const MAIN = preload("uid://un1xgkhi1vmp")
-const MENU = preload("uid://cuxsom1083lt7")
-
 @export var destination: NAVIGATION_DESTINATION
 
 var font_size: int = 48
@@ -23,8 +20,8 @@ func _ready() -> void:
 func _on_pressed():
 	match destination:
 		NAVIGATION_DESTINATION.MAIN:
-			get_tree().change_scene_to_packed(MAIN)
+			get_tree().change_scene_to_packed(load("uid://un1xgkhi1vmp"))
 		NAVIGATION_DESTINATION.MENU:
-			get_tree().change_scene_to_packed(MENU)
+			get_tree().change_scene_to_packed(load("uid://cuxsom1083lt7"))
 		NAVIGATION_DESTINATION.QUIT:
 			get_tree().quit()

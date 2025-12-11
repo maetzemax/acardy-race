@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=4 uid="uid://un1xgkhi1vmp"]
+[gd_scene load_steps=40 format=4 uid="uid://un1xgkhi1vmp"]
 
 [ext_resource type="Script" uid="uid://bbl8eg0jx6typ" path="res://multiplayer/multiplayer_manager.gd" id="1_cegan"]
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="1_yaehf"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/car.tscn" id="6_vivmo"]
 [ext_resource type="Script" uid="uid://p7wdtvnuik6k" path="res://ui/hud/half_circle_gauge.gd" id="7_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://x67th36qxib8" path="res://assets/trees/tree_2.tscn" id="8_efxa6"]
+[ext_resource type="Theme" uid="uid://dh2bm71ea5l7o" path="res://ui/themes/main_theme.tres" id="8_getpj"]
 [ext_resource type="Script" uid="uid://dwn5iw5n5k2lx" path="res://multiplayer/join_button.gd" id="9_074og"]
 [ext_resource type="PackedScene" uid="uid://b1nqw28yyul3y" path="res://assets/trees/tree_1.tscn" id="9_dg77c"]
 [ext_resource type="Script" uid="uid://bmovdhneyu04e" path="res://multiplayer/create_match_button.gd" id="9_yaehf"]
@@ -78,6 +79,37 @@ bg_color = Color(1, 0.29803923, 0.29411766, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2cqfq"]
 bg_color = Color(0.19215687, 0.6, 0.6, 1)
+
+[sub_resource type="GDScript" id="GDScript_xio0d"]
+script/source = "extends Button
+
+enum NAVIGATION_DESTINATION {
+	MAIN,
+	MENU,
+	QUIT,
+}
+
+const MAIN = preload(\"uid://un1xgkhi1vmp\")
+const MENU = preload(\"uid://cuxsom1083lt7\")
+
+@export var destination: NAVIGATION_DESTINATION
+
+var font_size: int = 48
+
+func _ready() -> void:
+	pressed.connect(_on_pressed)
+	add_theme_font_size_override(\"font_size\", font_size)
+	
+
+func _on_pressed():
+	match destination:
+		NAVIGATION_DESTINATION.MAIN:
+			get_tree().change_scene_to_packed(MAIN)
+		NAVIGATION_DESTINATION.MENU:
+			get_tree().change_scene_to_packed(MENU)
+		NAVIGATION_DESTINATION.QUIT:
+			get_tree().quit()
+"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38mq5"]
 resource_name = "Fence.Pole"
@@ -210,7 +242,7 @@ directional_shadow_split_3 = 0.25
 directional_shadow_max_distance = 250.0
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
-transform = Transform3D(-0.60299915, 0, 0.79774183, 0, 1, 0, -0.79774183, 0, -0.60299915, 7.8132133, 9.074144, -4.7793937)
+transform = Transform3D(-0.60299915, 0, 0.79774183, 0, 1, 0, -0.79774183, 0, -0.60299915, 123.81322, 12.074144, -74.779396)
 fov = 84.5
 script = ExtResource("2_h2yge")
 target = NodePath("../VehicleBody3D")
@@ -218,30 +250,40 @@ default_offset = Vector3(0, 3, -6)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Debug" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("laptime_service", "laptimer", "vehicle", "speed_label", "speed_gauge", "throttle_bar", "brake_bar", "steering_bar", "lap_time_label", "best_time_label", "local_best_time_label", "last_time_label", "delta_label")]
+[node name="UI" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("8_getpj")
+
+[node name="Debug" type="Control" parent="CanvasLayer/UI" node_paths=PackedStringArray("laptimer", "vehicle", "speed_label", "speed_gauge", "throttle_bar", "brake_bar", "steering_bar", "lap_time_label", "sector_label", "best_time_label", "local_best_time_label", "last_time_label", "delta_label")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("4_1bvp3")
-laptime_service = NodePath("../../LaptimeService")
-laptimer = NodePath("../../Laptimer")
-vehicle = NodePath("../../VehicleBody3D")
+laptimer = NodePath("../../../Laptimer")
+vehicle = NodePath("../../../VehicleBody3D")
 speed_label = NodePath("Tachometer/MarginContainer2/VBoxContainer/MarginContainer/Speed Label")
 speed_gauge = NodePath("Tachometer/MarginContainer2/VBoxContainer/MarginContainer/HalfCircleGauge")
 throttle_bar = NodePath("Tachometer/MarginContainer2/VBoxContainer/ThrottleBar")
 brake_bar = NodePath("Tachometer/MarginContainer2/VBoxContainer/BrakeBar")
 steering_bar = NodePath("Tachometer/MarginContainer2/VBoxContainer/Steering")
 lap_time_label = NodePath("Laptime/VBoxContainer/LapTime")
+sector_label = NodePath("MarginContainer/MarginContainer/VBoxContainer/PersonalSectorLabel")
 best_time_label = NodePath("MarginContainer/MarginContainer/VBoxContainer/BestTimeLabel")
 local_best_time_label = NodePath("MarginContainer/MarginContainer/VBoxContainer/LocalBestLabel")
 last_time_label = NodePath("MarginContainer/MarginContainer/VBoxContainer/LastTimeLabel")
 delta_label = NodePath("Laptime/VBoxContainer/Delta")
 max_speed_display = 200.0
 
-[node name="Laptime" type="MarginContainer" parent="CanvasLayer/Debug"]
+[node name="Laptime" type="MarginContainer" parent="CanvasLayer/UI/Debug"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -251,21 +293,22 @@ offset_right = 88.5
 offset_bottom = 23.0
 grow_horizontal = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Debug/Laptime"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/Debug/Laptime"]
 layout_mode = 2
 
-[node name="LapTime" type="Label" parent="CanvasLayer/Debug/Laptime/VBoxContainer"]
+[node name="LapTime" type="Label" parent="CanvasLayer/UI/Debug/Laptime/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Start/Ziel passieren"
 horizontal_alignment = 1
 
-[node name="Delta" type="Label" parent="CanvasLayer/Debug/Laptime/VBoxContainer"]
+[node name="Delta" type="Label" parent="CanvasLayer/UI/Debug/Laptime/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "0:00.000"
 horizontal_alignment = 1
 
-[node name="Tachometer" type="MarginContainer" parent="CanvasLayer/Debug"]
+[node name="Tachometer" type="MarginContainer" parent="CanvasLayer/UI/Debug"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -282,24 +325,24 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="Panel" type="Panel" parent="CanvasLayer/Debug/Tachometer"]
+[node name="Panel" type="Panel" parent="CanvasLayer/UI/Debug/Tachometer"]
 layout_mode = 2
 
-[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Debug/Tachometer"]
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/UI/Debug/Tachometer"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Debug/Tachometer/MarginContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/Debug/Tachometer/MarginContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/Debug/Tachometer/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 
-[node name="HalfCircleGauge" type="Control" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer/MarginContainer"]
+[node name="HalfCircleGauge" type="Control" parent="CanvasLayer/UI/Debug/Tachometer/MarginContainer2/VBoxContainer/MarginContainer"]
 custom_minimum_size = Vector2(260, 140)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -307,7 +350,7 @@ script = ExtResource("7_2cqfq")
 max_value = 250.0
 fill_gradient = SubResource("Gradient_2cqfq")
 
-[node name="Speed Label" type="Label" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer/MarginContainer"]
+[node name="Speed Label" type="Label" parent="CanvasLayer/UI/Debug/Tachometer/MarginContainer2/VBoxContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
@@ -316,22 +359,22 @@ text = "100"
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="ThrottleBar" type="ProgressBar" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer"]
+[node name="ThrottleBar" type="ProgressBar" parent="CanvasLayer/UI/Debug/Tachometer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(320, 40)
 layout_mode = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_vivmo")
 
-[node name="BrakeBar" type="ProgressBar" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer"]
+[node name="BrakeBar" type="ProgressBar" parent="CanvasLayer/UI/Debug/Tachometer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(320, 40)
 layout_mode = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_yaehf")
 
-[node name="Steering" type="ProgressBar" parent="CanvasLayer/Debug/Tachometer/MarginContainer2/VBoxContainer"]
+[node name="Steering" type="ProgressBar" parent="CanvasLayer/UI/Debug/Tachometer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(320, 40)
 layout_mode = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_2cqfq")
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Debug"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/Debug"]
 layout_mode = 1
 offset_right = 168.0
 offset_bottom = 168.0
@@ -340,67 +383,70 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="Panel" type="Panel" parent="CanvasLayer/Debug/MarginContainer"]
+[node name="Panel" type="Panel" parent="CanvasLayer/UI/Debug/MarginContainer"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Debug/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/Debug/MarginContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Debug/MarginContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/Debug/MarginContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="BestTimeTitle" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
+[node name="BestTimeTitle" type="Label" parent="CanvasLayer/UI/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "GLOBAL BEST:"
 
-[node name="BestTimeLabel" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
+[node name="BestTimeLabel" type="Label" parent="CanvasLayer/UI/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "0:47.321"
 
-[node name="LocalBestTitle" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
+[node name="LocalBestTitle" type="Label" parent="CanvasLayer/UI/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "PERSONAL BEST:"
 
-[node name="LocalBestLabel" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
+[node name="LocalBestLabel" type="Label" parent="CanvasLayer/UI/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
+text = "-"
+
+[node name="PersonalSectorLabel" type="Label" parent="CanvasLayer/UI/Debug/MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
 text = "0:47.321"
 
-[node name="LastTimeTitle" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
+[node name="LastTimeTitle" type="Label" parent="CanvasLayer/UI/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "LAST:"
 
-[node name="LastTimeLabel" type="Label" parent="CanvasLayer/Debug/MarginContainer/MarginContainer/VBoxContainer"]
+[node name="LastTimeLabel" type="Label" parent="CanvasLayer/UI/Debug/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "0:47.321"
 
-[node name="InputSettings" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("vehicle")]
-layout_mode = 3
+[node name="InputSettings" type="Control" parent="CanvasLayer/UI" node_paths=PackedStringArray("vehicle")]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("5_272bh")
-vehicle = NodePath("../../VehicleBody3D")
+vehicle = NodePath("../../../VehicleBody3D")
 
-[node name="CreateMatch" type="Control" parent="CanvasLayer"]
+[node name="CreateMatch" type="Control" parent="CanvasLayer/UI"]
 visible = false
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/CreateMatch"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/CreateMatch"]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -414,20 +460,46 @@ grow_horizontal = 0
 grow_vertical = 2
 theme_override_constants/margin_right = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CreateMatch/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/CreateMatch/MarginContainer"]
 layout_mode = 2
 
-[node name="Join" type="Button" parent="CanvasLayer/CreateMatch/MarginContainer/VBoxContainer"]
+[node name="Join" type="Button" parent="CanvasLayer/UI/CreateMatch/MarginContainer/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "Join"
 script = ExtResource("9_074og")
 
-[node name="Create" type="Button" parent="CanvasLayer/CreateMatch/MarginContainer/VBoxContainer"]
+[node name="Create" type="Button" parent="CanvasLayer/UI/CreateMatch/MarginContainer/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 text = "Create Match"
 script = ExtResource("9_yaehf")
+
+[node name="Back" type="Control" parent="CanvasLayer/UI"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/Back"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 1531.0
+offset_right = 1880.0
+offset_bottom = 99.0
+grow_horizontal = 0
+theme = ExtResource("8_getpj")
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+
+[node name="Button" type="Button" parent="CanvasLayer/UI/Back/MarginContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "MAIN MENU"
+script = SubResource("GDScript_xio0d")
+destination = 1
+metadata/_custom_type_script = "uid://dtspxlqtx4urm"
 
 [node name="StartFinish" parent="." instance=ExtResource("5_7mycd")]
 transform = Transform3D(0.47769555, 0, -0.8785255, 0, 1, 0, 0.8785255, 0, 0.47769555, -18.327768, 7.0625916, 7.9947166)
@@ -448,9 +520,8 @@ collision_mask = 3
 is_start_finish = false
 checkpoint_number = 1
 
-[node name="Laptimer" type="Node3D" parent="." node_paths=PackedStringArray("laptime_service", "vehicle")]
+[node name="Laptimer" type="Node3D" parent="." node_paths=PackedStringArray("vehicle")]
 script = ExtResource("4_lquwl")
-laptime_service = NodePath("../LaptimeService")
 vehicle = NodePath("../VehicleBody3D")
 
 [node name="Environment" type="Node3D" parent="."]
@@ -2195,7 +2266,7 @@ collision_mask = 2
 transform = Transform3D(-0.39073086, 0.015139287, -0.9203803, -1.3969839e-09, 0.99986476, 0.016446723, 0.92050475, 0.0064262454, -0.39067805, 28.133633, 3.5167842, 110.44866)
 
 [node name="VehicleBody3D" parent="." instance=ExtResource("6_vivmo")]
-transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, 0, 4.357322, 0)
+transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, 116, 7.357322, -70)
 collision_mask = 3
 engine_vibration_strength = 0.05
 

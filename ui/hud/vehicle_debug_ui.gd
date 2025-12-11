@@ -11,6 +11,7 @@ extends Control
 @export var brake_bar: ProgressBar
 @export var steering_bar: ProgressBar
 @export var lap_time_label: Label
+@export var sector_label: Label
 @export var best_time_label: Label
 @export var local_best_time_label: Label
 @export var last_time_label: Label
@@ -51,6 +52,10 @@ func _process(delta):
 	last_time_label.text = _format_time(LeaderboardService.last_lap_time)
 	local_best_time_label.text = _format_time(LeaderboardService.local_best_lap_time)
 	
+	if LeaderboardService.best_sector_times:
+		sector_label.text = _format_sectors(LeaderboardService.best_sector_times)
+		sector_label.visible = true
+	
 	# Geschwindigkeit in km/h
 	var speed_ms = vehicle.linear_velocity.length()
 	var speed_kmh = speed_ms * 3.6
@@ -85,12 +90,26 @@ func _format_time(time_seconds: float) -> String:
 	return "%d:%02d.%03d" % [minutes, seconds, milliseconds]
 
 
+func _format_sectors(sectors) -> String:
+	var base = ""
+	
+	if not sectors:
+		return ""
+	
+	for sector in sectors:
+		base += _format_time(sector)
+		
+		if sector != sectors[sectors.size() - 1]:
+			base += ", "
+	
+	return base
+
 func _maybe_trigger_delta_flash(delta_value: float) -> void:
 	if not delta_initialized or not is_equal_approx(delta_value, last_delta_value):
 		delta_initialized = true
 		last_delta_value = delta_value
 		delta_display_timer = 3.0
-		if delta_label:
+		if delta_label and is_zero_approx(delta_value):
 			delta_label.visible = true
 
 
