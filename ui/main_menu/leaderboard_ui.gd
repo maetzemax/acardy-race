@@ -2,14 +2,14 @@ extends Control
 
 @onready var lap_time_list: VBoxContainer = $VBoxContainer/LapTimeList
 
-var _lap_times: Dictionary = {}
+var entries: Array[LeaderboardEntry] = []
 
 
 func _ready():
 	await get_tree().create_timer(1.0).timeout
-	_lap_times = await LeaderboardService.load_best_times(5)
+	entries = await LeaderboardService.load_best_times(5)
 	
-	if _lap_times.size() < 1:
+	if entries.size() < 1:
 		var label = Label.new()
 		label.text = "NO TIMES FOUND"
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -17,11 +17,11 @@ func _ready():
 		lap_time_list.add_child(label)
 		return
 	
-	for username in _lap_times:
+	for entry in entries:
 		var label = Label.new()
-		label.text = username + " - " + _format_time(_lap_times[username])
+		label.text = entry.username + " - " + _format_time(entry.laptime) + " (" + _format_sectors(entry.sector_times) + ")"
 		
-		if username == RacingNakamaClient.user.username:
+		if entry.username == RacingNakamaClient.user.username:
 			label.add_theme_color_override("font_color", Color.GREEN)
 		
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -34,3 +34,15 @@ func _format_time(time_seconds: float) -> String:
 	var seconds = int(time_seconds) % 60
 	var milliseconds = int((time_seconds - int(time_seconds)) * 1000)
 	return "%d:%02d.%03d" % [minutes, seconds, milliseconds]
+
+	
+func _format_sectors(sectors) -> String:
+	var base = ""
+	
+	for sector in sectors:
+		base += _format_time(sector)
+		
+		if sector != sectors[sectors.size() - 1]:
+			base += ", "
+			
+	return base
