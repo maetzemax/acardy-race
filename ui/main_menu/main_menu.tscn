@@ -1,17 +1,19 @@
-[gd_scene load_steps=27 format=4 uid="uid://cuxsom1083lt7"]
+[gd_scene load_steps=29 format=4 uid="uid://cuxsom1083lt7"]
 
 [ext_resource type="PackedScene" uid="uid://d115gn4krhqf5" path="res://assets/tracks/WindigCircuit.glb" id="1_fu7sn"]
-[ext_resource type="Script" uid="uid://7rifa2h88dt3" path="res://main_menu_ui.gd" id="2_j5v2v"]
+[ext_resource type="Script" uid="uid://7rifa2h88dt3" path="res://ui/main_menu/main_menu_ui.gd" id="2_j5v2v"]
 [ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/car.tscn" id="2_jix8l"]
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="3_0k4wn"]
-[ext_resource type="Script" uid="uid://dtspxlqtx4urm" path="res://start_button.gd" id="3_glbon"]
-[ext_resource type="Theme" uid="uid://dh2bm71ea5l7o" path="res://main_theme.tres" id="3_jix8l"]
+[ext_resource type="Script" uid="uid://dtspxlqtx4urm" path="res://ui/core/navigation_button.gd" id="3_glbon"]
+[ext_resource type="Theme" uid="uid://dh2bm71ea5l7o" path="res://ui/themes/main_theme.tres" id="3_jix8l"]
+[ext_resource type="Script" uid="uid://dewxelljqmeae" path="res://ui/main_menu/leaderboard_ui.gd" id="4_iotk1"]
 [ext_resource type="Resource" uid="uid://cvxw651qwja6o" path="res://addons/day_and_night_cycle/presets/sky_cover/sky_cover_day_cycle.tres" id="4_j5v2v"]
 [ext_resource type="Script" uid="uid://kolqah11th63" path="res://addons/day_and_night_cycle/scripts/cycle_data.gd" id="5_iotk1"]
 [ext_resource type="PackedScene" uid="uid://x67th36qxib8" path="res://assets/trees/tree_2.tscn" id="6_w44g7"]
 [ext_resource type="PackedScene" uid="uid://b1nqw28yyul3y" path="res://assets/trees/tree_1.tscn" id="7_cm266"]
 [ext_resource type="PackedScene" uid="uid://dcxtxmgptjavb" path="res://assets/trees/tree_3.tscn" id="8_g8g3n"]
 [ext_resource type="PackedScene" uid="uid://bn8ioo8001p7y" path="res://assets/trees/tree_4.tscn" id="9_8u0te"]
+[ext_resource type="Script" uid="uid://lplmeembexqu" path="res://lap_timer/laptime_service.gd" id="14_w44g7"]
 
 [sub_resource type="Gradient" id="Gradient_oiatc"]
 offsets = PackedFloat32Array(0, 0.1, 0.5, 0.9, 1)
@@ -160,6 +162,10 @@ shadow_mesh = SubResource("ArrayMesh_tgtu5")
 
 [node name="Main Menu" type="Node3D"]
 
+[node name="LaptimeService" type="Node3D" parent="."]
+script = ExtResource("14_w44g7")
+metadata/_custom_type_script = "uid://lplmeembexqu"
+
 [node name="MenuCamera" type="Camera3D" parent="."]
 transform = Transform3D(-0.9848014, -0.0044463575, -0.17362687, -0.0017451129, 0.99987507, -0.015707318, 0.17367503, -0.015165591, -0.9846862, -10.692153, 4.546669, 65.04353)
 
@@ -239,7 +245,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "BACK"
 
-[node name="Leaderboard" type="CenterContainer" parent="CanvasGroup/UI"]
+[node name="Leaderboard" type="CenterContainer" parent="CanvasGroup/UI" node_paths=PackedStringArray("laptime_service")]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -247,17 +253,25 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("4_iotk1")
+laptime_service = NodePath("../../../LaptimeService")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasGroup/UI/Leaderboard"]
 custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 40
 
-[node name="Label" type="Label" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
+[node name="TopLabel" type="Label" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "WORK IN PROGRESS"
+theme_override_font_sizes/font_size = 64
+text = "LEADERBOARD (TOP 5)"
 horizontal_alignment = 1
+
+[node name="LapTimeList" type="VBoxContainer" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
 
 [node name="Back" type="Button" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
 layout_mode = 2

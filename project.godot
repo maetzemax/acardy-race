@@ -33,6 +33,12 @@ window/vsync/vsync_mode=0
 
 enabled=PackedStringArray("res://addons/day_and_night_cycle/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://ui/": "blue"
+}
+
 [global_group]
 
 grass=""

@@ -69,3 +69,25 @@ func load_best_time():
 		var record : NakamaAPI.ApiLeaderboardRecord = result.records[0]
 		var lap_time = float(record.score) / 1000.0
 		best_lap_time = lap_time
+
+
+func load_best_times(limit = 20) -> Dictionary:
+	var result : NakamaAPI.ApiLeaderboardRecordList = await RacingNakamaClient.client.list_leaderboard_records_async(
+		RacingNakamaClient.session,
+		LEADERBOARD_ID,
+		null,
+		null,
+		limit
+	)
+	
+	if result.is_exception():
+		print("An error occurred: %s" % result)
+		return {}
+	
+	var times: Dictionary = {}
+	
+	for record in result.records:
+		var time = float(record.score) / 1000
+		times[record.username] = time
+	
+	return times
