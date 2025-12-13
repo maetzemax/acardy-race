@@ -1,7 +1,6 @@
 extends Control
 
 ## Debug UI für Fahrzeug-Informationen
-@export var laptime_service: LaptimeService
 @export var laptimer: Node3D
 @export var vehicle: VehicleBody3D
 
@@ -12,6 +11,7 @@ extends Control
 @export var brake_bar: ProgressBar
 @export var steering_bar: ProgressBar
 @export var lap_time_label: Label
+@export var sector_label: Label
 @export var best_time_label: Label
 @export var local_best_time_label: Label
 @export var last_time_label: Label
@@ -35,10 +35,10 @@ func _input(event):
 
 
 func _process(delta):
-	if vehicle == null or laptime_service == null:
+	if vehicle == null:
 		return
 
-	_maybe_trigger_delta_flash(laptime_service.current_delta)
+	_maybe_trigger_delta_flash(LeaderboardService.current_delta)
 	_update_delta_visibility(delta)
 	
 	if laptimer.is_invalid_time:
@@ -48,9 +48,13 @@ func _process(delta):
 	else:
 		lap_time_label.text = "Start/Ziel passieren"
 		
-	best_time_label.text = _format_time(laptime_service.best_lap_time)
-	last_time_label.text = _format_time(laptime_service.last_lap_time)
-	local_best_time_label.text = _format_time(laptime_service.local_best_lap_time)
+	best_time_label.text = _format_time(LeaderboardService.best_lap_time)
+	last_time_label.text = _format_time(LeaderboardService.last_lap_time)
+	local_best_time_label.text = _format_time(LeaderboardService.local_best_lap_time)
+	
+	if LeaderboardService.best_sector_times:
+		sector_label.text = _format_sectors(LeaderboardService.best_sector_times)
+		sector_label.visible = true
 	
 	# Geschwindigkeit in km/h
 	var speed_ms = vehicle.linear_velocity.length()
@@ -60,16 +64,16 @@ func _process(delta):
 		speed_gauge.max_value = max_speed_display
 		speed_gauge.value = clamp(speed_kmh, 0.0, max_speed_display)
 	
-	delta_label.text = ("+" if laptime_service.current_delta > 0 else "-") + _format_time(abs(laptime_service.current_delta))
+	delta_label.text = ("+" if LeaderboardService.current_delta > 0 else "-") + _format_time(abs(LeaderboardService.current_delta))
 	
-	if laptime_service.current_delta < 0:
+	if LeaderboardService.current_delta < 0:
 		delta_label.add_theme_color_override("font_color", Color.GREEN)
-	elif laptime_service.current_delta > 0:
+	elif LeaderboardService.current_delta > 0:
 		delta_label.add_theme_color_override("font_color", Color.RED)
 	else:
 		delta_label.add_theme_color_override("font_color", Color.WHITE)
 
-	throttle_bar.value = Input.get_action_strength("accelerate") * 100.0
+	throttle_bar.value = Input.get_action_strength("throttle") * 100.0
 	brake_bar.value = Input.get_action_strength("brake") * 100.0
 	
 	# Lenkung (-100 bis +100, zeigen wir als 0-100 mit Mitte bei 50)
@@ -85,6 +89,20 @@ func _format_time(time_seconds: float) -> String:
 	var milliseconds = int((time_seconds - int(time_seconds)) * 1000)
 	return "%d:%02d.%03d" % [minutes, seconds, milliseconds]
 
+
+func _format_sectors(sectors) -> String:
+	var base = ""
+	
+	if not sectors:
+		return ""
+	
+	for sector in sectors:
+		base += _format_time(sector)
+		
+		if sector != sectors[sectors.size() - 1]:
+			base += ", "
+	
+	return base
 
 func _maybe_trigger_delta_flash(delta_value: float) -> void:
 	if not delta_initialized or not is_equal_approx(delta_value, last_delta_value):

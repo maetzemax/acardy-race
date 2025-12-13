@@ -5,6 +5,8 @@ var session : NakamaSession
 
 @onready var socket : NakamaSocket
 
+var user
+
 func _ready():
 	var device_id = OS.get_unique_id()
 	
@@ -17,5 +19,8 @@ func _ready():
 	if connected.is_exception():
 		print("An error occurred: %s" % connected)
 		return
+
+	var account = await client.get_account_async(session)
+	user = account.user
 
 	print("Socket connected.")

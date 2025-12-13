@@ -50,7 +50,7 @@ var downforce: Vector3
 
 # Input Deadzones
 var input_steering_deadzone: float = 0.0
-var input_accelerate_deadzone: float = 0.0
+var input_throttle_deadzone: float = 0.0
 var input_brake_deadzone: float = 0.0
 var brake_strength: float = 0.0
 
@@ -64,8 +64,8 @@ var multiplayer_service: Node = null
 
 
 func _ready():
-	# Find multiplayer service in scene
 	multiplayer_service = get_tree().root.find_child("MultiplayerService", true, false)
+	set_input_deadzones()
 
 
 func _physics_process(delta: float):
@@ -89,13 +89,11 @@ func _physics_process(delta: float):
 
 
 func _handle_vehicle_control(delta):
-	# Separate Inputs für Gas und Bremse
-	var accelerate_input = Input.get_action_strength("accelerate")
+	var throttle_input = Input.get_action_strength("throttle")
 	var brake_input = Input.get_action_strength("brake")
 	var steering_raw = Input.get_action_strength("turn_left") - Input.get_action_strength("turn_right")
 	
-	# Deadzone anwenden und remappen (0.0-deadzone wird zu 0%, deadzone-1.0 wird zu 0%-100%)
-	accelerate_input = _apply_deadzone_remap(accelerate_input, input_accelerate_deadzone)
+	throttle_input = _apply_deadzone_remap(throttle_input, input_throttle_deadzone)
 	brake_input = _apply_deadzone_remap(brake_input, input_brake_deadzone)
 	steering_raw = _apply_deadzone_remap(steering_raw, input_steering_deadzone)
 	
@@ -109,7 +107,7 @@ func _handle_vehicle_control(delta):
 		print("Gang: Rückwärts")
 	
 	# Throttle mit Gang multiplizieren
-	throttle = accelerate_input * current_gear
+	throttle = throttle_input * current_gear
 	
 	steering_input = steering_raw
 	steering = move_toward(steering, steering_input * max_steering_angle, delta * steering_speed)
@@ -165,11 +163,11 @@ func _apply_deadzone_remap(input_value: float, deadzone: float) -> float:
 	return remapped * sign_value
 
 
-func set_input_deadzones(steering_dz: float, accelerate_dz: float, brake_dz: float):
-	input_steering_deadzone = steering_dz
-	input_accelerate_deadzone = accelerate_dz
-	input_brake_deadzone = brake_dz
-
+func set_input_deadzones():
+	var deadzone: Deadzone = OptionsService.get_deadzone_settings()
+	input_throttle_deadzone = deadzone.throttle
+	input_brake_deadzone = deadzone.brake
+	input_steering_deadzone = deadzone.steer
 
 func _handle_engine_sound():
 	if engine_sound == null:
@@ -188,6 +186,7 @@ func _handle_engine_sound():
 	
 	var target_volume = lerp(min_volume, max_volume, throttle_factor)
 	engine_sound.volume_db = target_volume
+
 
 func is_off_track() -> bool:
 	return wheel_front_left.is_off_track and wheel_front_right.is_off_track and wheel_rear_left.is_off_track and wheel_rear_right.is_off_track
