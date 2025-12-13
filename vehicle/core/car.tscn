@@ -864,9 +864,11 @@ script = ExtResource("1_k61xc")
 acceleration = 250.0
 transmission = NodePath("VehicleTransmission")
 use_automatic_transmission = false
+steering_speed = 1.2
 normal_brake_force = 10.0
-min_volume = -30.0
-max_volume = -10.0
+suspension_stiff_value = 180.0
+min_volume = -25.0
+max_volume = -20.0
 
 [node name="VehicleTransmission" type="Node" parent="."]
 script = ExtResource("2_hev5d")

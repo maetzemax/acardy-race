@@ -231,13 +231,6 @@ shadow_blur = 0.5
 directional_shadow_split_3 = 0.25
 directional_shadow_max_distance = 250.0
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
-transform = Transform3D(-0.60299915, 0, 0.79774183, 0, 1, 0, -0.79774183, 0, -0.60299915, 123.81322, 12.074144, -74.779396)
-fov = 84.5
-script = ExtResource("6_88iea")
-target = NodePath("../VehicleBody3D")
-default_offset = Vector3(0, 3, -6)
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="UI" type="Control" parent="CanvasLayer"]
@@ -2232,9 +2225,22 @@ collision_mask = 2
 [node name="Stands" parent="WindigCircuit" index="12"]
 transform = Transform3D(-0.39073086, 0.015139287, -0.9203803, -1.3969839e-09, 0.99986476, 0.016446723, 0.92050475, 0.0064262454, -0.39067805, 28.133633, 3.5167842, 110.44866)
 
-[node name="VehicleBody3D" parent="." instance=ExtResource("1_fyij8")]
+[node name="ChaseCam" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
+transform = Transform3D(-0.49999988, 0, 0.8660255, 0, 1, 0, -0.8660255, 0, -0.49999988, 119.62202, 9.396548, -72.09117)
+fov = 84.5
+script = ExtResource("6_88iea")
+target = NodePath("../VehicleBody3D")
+
+[node name="VehicleBody3D" parent="." node_paths=PackedStringArray("cockpit_camera", "chase_camera") instance=ExtResource("1_fyij8")]
 transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, 116, 7.357322, -70)
 collision_mask = 3
 engine_vibration_strength = 0.05
+cockpit_camera = NodePath("CockpitCam")
+chase_camera = NodePath("../ChaseCam")
+
+[node name="CockpitCam" type="Camera3D" parent="VehicleBody3D"]
+transform = Transform3D(-1, 0, 8.940697e-08, 0, 1, 0, -8.940697e-08, 0, -1, 1.1385376e-08, 0.9299998, 0.6218277)
+visible = false
+fov = 84.5
 
 [editable path="WindigCircuit"]

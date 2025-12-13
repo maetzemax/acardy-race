@@ -47,6 +47,10 @@ var downforce: Vector3
 @export var collision_vibration_duration: float = 0.3
 @export var offroad_vibration_strength: float = 0.4
 
+@export_group("Camera")
+@export var cockpit_camera: Camera3D
+@export var chase_camera: Camera3D
+
 # Input Deadzones
 var input_steering_deadzone: float = 0.0
 var input_throttle_deadzone: float = 0.0
@@ -93,6 +97,9 @@ func _handle_vehicle_control(delta):
 	steering_raw = _apply_deadzone_remap(steering_raw, input_steering_deadzone)
 	
 	brake_strength = brake_input
+	
+	if Input.is_action_just_pressed("switch_perspective"):
+		next_perspective()
 	
 	# Gangwechsel-Logik mit Rückwärtsgang
 	if Input.is_action_just_pressed("shift_up"):
@@ -264,6 +271,13 @@ func _handle_controller_vibration(delta: float):
 	var engine_rumble = (throttle_vibration * 0.7) + (rpm_factor * engine_vibration_strength * 0.3)
 	
 	Input.start_joy_vibration(0, engine_rumble * 0.5, engine_rumble * 0.3, delta)
+
+
+func next_perspective():
+	if chase_camera.current:
+		cockpit_camera.make_current()
+	else:
+		chase_camera.make_current()
 
 
 # Debug Info abrufen
