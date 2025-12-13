@@ -2,7 +2,7 @@ class_name OptionsService
 extends Node
 
 
-static func set_deadzone_settings(deadzone: Deadzone):
+static func set_deadzone_settings(deadzone: DeadzoneSettings):
 	var config = ConfigFile.new()
 	config.set_value("input", "throttle_deadzone", deadzone.throttle)
 	config.set_value("input", "brake_deadzone", deadzone.brake)
@@ -10,7 +10,7 @@ static func set_deadzone_settings(deadzone: Deadzone):
 	config.save("user://input_settings.cfg")
 
 
-static func get_deadzone_settings() -> Deadzone:
+static func get_deadzone_settings() -> DeadzoneSettings:
 	var config = ConfigFile.new()
 	var err = config.load("user://input_settings.cfg")
 	
@@ -19,7 +19,7 @@ static func get_deadzone_settings() -> Deadzone:
 		var brake_deadzone = config.get_value("input", "brake_deadzone", 0.05)
 		var steering_deadzone = config.get_value("input", "steering_deadzone", 0.0)
 			
-		return Deadzone.new(throttle_deadzone, brake_deadzone, steering_deadzone)
+		return DeadzoneSettings.new(throttle_deadzone, brake_deadzone, steering_deadzone)
 	else:
 		return null
 

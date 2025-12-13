@@ -17,6 +17,9 @@ extends Control
 @export var last_time_label: Label
 @export var delta_label: Label
 
+@export var gear_label: Label
+@export var rpm_label: Label
+
 @export var max_speed_display: float = 350.0
 
 var delta_display_timer: float = 0.0
@@ -80,6 +83,11 @@ func _process(delta):
 	if vehicle.steering:
 		var steering_percent = (vehicle.steering / vehicle.max_steering_angle) * 50.0 + 50.0
 		steering_bar.value = steering_percent
+		
+	if vehicle.transmission:
+		var transmission: VehicleTransmission = vehicle.transmission
+		rpm_label.text = "RPM: %d" % transmission.get_current_rpm() + " / %d" % transmission.max_rpm
+		gear_label.text = "Gear: " +  transmission.get_gear_display()
 
 
 func _format_time(time_seconds: float) -> String:

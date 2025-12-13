@@ -1,6 +1,6 @@
 extends Control
 
-#region Deadzone
+#region DeadzoneSettings
 @export var accelerate_value_label: Label
 @export var brake_value_label: Label
 @export var steering_value_label: Label
@@ -55,7 +55,7 @@ func _process(_delta):
 
 
 func _on_save():
-	var deadzone = Deadzone.new(throttle_deadzone, brake_deadzone, steering_deadzone) 
+	var deadzone = DeadzoneSettings.new(throttle_deadzone, brake_deadzone, steering_deadzone) 
 	OptionsService.set_deadzone_settings(deadzone)
 	
 	if RacingNakamaClient.user.username != username_line_edit.text and username_line_edit.text.length() > 2:
