@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=4 uid="uid://un1xgkhi1vmp"]
+[gd_scene load_steps=39 format=4 uid="uid://un1xgkhi1vmp"]
 
 [ext_resource type="Script" uid="uid://bbl8eg0jx6typ" path="res://multiplayer/multiplayer_manager.gd" id="1_cegan"]
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="1_yaehf"]
@@ -8,8 +8,7 @@
 [ext_resource type="Script" uid="uid://c4m1g4n5tuqko" path="res://ui/hud/vehicle_debug_ui.gd" id="4_1bvp3"]
 [ext_resource type="Script" uid="uid://c3s6y1fk014d3" path="res://lap_timer/lap_timer.gd" id="4_lquwl"]
 [ext_resource type="PackedScene" uid="uid://ctmpu61ifjnvd" path="res://lap_timer/lap_checkpoint.tscn" id="5_7mycd"]
-[ext_resource type="Script" uid="uid://cqs6x14modxj" path="res://ui/hud/input_settings_ui.gd" id="5_272bh"]
-[ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/car.tscn" id="6_vivmo"]
+[ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/core/car.tscn" id="6_vivmo"]
 [ext_resource type="Script" uid="uid://p7wdtvnuik6k" path="res://ui/hud/half_circle_gauge.gd" id="7_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://x67th36qxib8" path="res://assets/trees/tree_2.tscn" id="8_efxa6"]
 [ext_resource type="Theme" uid="uid://dh2bm71ea5l7o" path="res://ui/themes/main_theme.tres" id="8_getpj"]
@@ -18,7 +17,7 @@
 [ext_resource type="Script" uid="uid://bmovdhneyu04e" path="res://multiplayer/create_match_button.gd" id="9_yaehf"]
 [ext_resource type="PackedScene" uid="uid://dcxtxmgptjavb" path="res://assets/trees/tree_3.tscn" id="10_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://bn8ioo8001p7y" path="res://assets/trees/tree_4.tscn" id="11_w48qg"]
-[ext_resource type="Script" uid="uid://lplmeembexqu" path="res://api/repositories/leaderboard/leaderboard_service.gd" id="13_ycdy4"]
+[ext_resource type="Script" uid="uid://lplmeembexqu" path="res://api/services/leaderboard/leaderboard_service.gd" id="13_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://d115gn4krhqf5" path="res://assets/tracks/WindigCircuit.glb" id="14_w48qg"]
 
 [sub_resource type="Gradient" id="Gradient_074og"]
@@ -430,13 +429,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "0:47.321"
 
-[node name="InputSettings" type="Control" parent="CanvasLayer/UI" node_paths=PackedStringArray("vehicle")]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("5_272bh")
-vehicle = NodePath("../../../VehicleBody3D")
-
 [node name="CreateMatch" type="Control" parent="CanvasLayer/UI"]
 visible = false
 layout_mode = 1
@@ -476,17 +468,20 @@ text = "Create Match"
 script = ExtResource("9_yaehf")
 
 [node name="Back" type="Control" parent="CanvasLayer/UI"]
-anchors_preset = 0
-offset_right = 40.0
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
 offset_bottom = 40.0
+grow_horizontal = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/Back"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 1531.0
-offset_right = 1880.0
+offset_left = -349.0
 offset_bottom = 99.0
 grow_horizontal = 0
 theme = ExtResource("8_getpj")
@@ -497,6 +492,8 @@ theme_override_constants/margin_right = 12
 layout_mode = 2
 focus_mode = 0
 text = "MAIN MENU"
+flat = true
+alignment = 2
 script = SubResource("GDScript_xio0d")
 destination = 1
 metadata/_custom_type_script = "uid://dtspxlqtx4urm"

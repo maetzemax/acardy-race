@@ -1,11 +1,12 @@
-[gd_scene load_steps=28 format=4 uid="uid://cuxsom1083lt7"]
+[gd_scene load_steps=29 format=4 uid="uid://cuxsom1083lt7"]
 
 [ext_resource type="PackedScene" uid="uid://d115gn4krhqf5" path="res://assets/tracks/WindigCircuit.glb" id="1_fu7sn"]
-[ext_resource type="Script" uid="uid://7rifa2h88dt3" path="res://ui/main_menu/main_menu_ui.gd" id="2_j5v2v"]
-[ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/car.tscn" id="2_jix8l"]
+[ext_resource type="Script" uid="uid://7rifa2h88dt3" path="res://main_menu/core/main_menu_ui.gd" id="2_j5v2v"]
+[ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/core/car.tscn" id="2_jix8l"]
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="3_0k4wn"]
+[ext_resource type="PackedScene" uid="uid://sdx1eof5jy32" path="res://main_menu/options/options_ui.tscn" id="3_18g7d"]
 [ext_resource type="Theme" uid="uid://dh2bm71ea5l7o" path="res://ui/themes/main_theme.tres" id="3_jix8l"]
-[ext_resource type="Script" uid="uid://dewxelljqmeae" path="res://ui/main_menu/leaderboard_ui.gd" id="4_iotk1"]
+[ext_resource type="Script" uid="uid://dewxelljqmeae" path="res://main_menu/leaderboard/leaderboard_ui.gd" id="4_iotk1"]
 [ext_resource type="Resource" uid="uid://cvxw651qwja6o" path="res://addons/day_and_night_cycle/presets/sky_cover/sky_cover_day_cycle.tres" id="4_j5v2v"]
 [ext_resource type="Script" uid="uid://kolqah11th63" path="res://addons/day_and_night_cycle/scripts/cycle_data.gd" id="5_iotk1"]
 [ext_resource type="PackedScene" uid="uid://x67th36qxib8" path="res://assets/trees/tree_2.tscn" id="6_w44g7"]
@@ -196,18 +197,28 @@ transform = Transform3D(-0.9848076, -0.12278788, -0.12278788, 0, 0.7071067, -0.7
 
 [node name="CanvasGroup" type="CanvasLayer" parent="."]
 
-[node name="UI" type="Control" parent="CanvasGroup" node_paths=PackedStringArray("camera")]
+[node name="UI" type="Control" parent="CanvasGroup" node_paths=PackedStringArray("menu", "options", "options_button", "options_back_button", "leaderboard", "leaderboard_button", "leaderboard_back_button", "camera")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
 theme = ExtResource("3_jix8l")
 script = ExtResource("2_j5v2v")
+menu = NodePath("CenterContainer/AspectRatioContainer/Menu")
+options = NodePath("CenterContainer/AspectRatioContainer/OptionsUI")
+options_button = NodePath("CenterContainer/AspectRatioContainer/Menu/OptionsButton")
+options_back_button = NodePath("CenterContainer/AspectRatioContainer/OptionsUI/CenterBox/VBoxContainer/Save")
+leaderboard = NodePath("CenterContainer/AspectRatioContainer/Leaderboard")
+leaderboard_button = NodePath("CenterContainer/AspectRatioContainer/Menu/LeaderboardButton")
+leaderboard_back_button = NodePath("CenterContainer/AspectRatioContainer/Leaderboard/Back")
 camera = NodePath("../../MenuCamera")
 
-[node name="Menu" type="CenterContainer" parent="CanvasGroup/UI"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasGroup/UI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -215,92 +226,72 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasGroup/UI/Menu"]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="CanvasGroup/UI/CenterContainer"]
+layout_mode = 2
+ratio = 1.7778
+
+[node name="Leaderboard" type="VBoxContainer" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 40
+script = ExtResource("4_iotk1")
+
+[node name="TopLabel" type="Label" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer/Leaderboard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "LEADERBOARD (TOP 5)"
+horizontal_alignment = 1
+
+[node name="LapTimeList" type="VBoxContainer" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer/Leaderboard"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Back" type="Button" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer/Leaderboard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "BACK"
+
+[node name="Menu" type="VBoxContainer" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer"]
 custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="StartButton" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
+[node name="StartButton" type="Button" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer/Menu"]
 layout_mode = 2
+focus_neighbor_bottom = NodePath("../LeaderboardButton")
 theme_override_font_sizes/font_size = 48
 text = "START"
 script = SubResource("GDScript_xio0d")
 metadata/_custom_type_script = "uid://dtspxlqtx4urm"
 
-[node name="LeaderboardButton" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
+[node name="LeaderboardButton" type="Button" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer/Menu"]
 layout_mode = 2
+focus_neighbor_top = NodePath("../StartButton")
+focus_neighbor_bottom = NodePath("../OptionsButton")
 theme_override_font_sizes/font_size = 48
 text = "LEADERBOARD"
 
-[node name="OptionsButton" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
+[node name="OptionsButton" type="Button" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer/Menu"]
 layout_mode = 2
+focus_neighbor_top = NodePath("../LeaderboardButton")
+focus_neighbor_bottom = NodePath("../Exit")
 theme_override_font_sizes/font_size = 48
 text = "OPTIONS"
 
-[node name="Exit" type="Button" parent="CanvasGroup/UI/Menu/VBoxContainer"]
+[node name="Exit" type="Button" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer/Menu"]
 layout_mode = 2
+focus_neighbor_top = NodePath("../OptionsButton")
 theme_override_font_sizes/font_size = 48
 text = "EXIT"
 script = SubResource("GDScript_xio0d")
 destination = 2
 metadata/_custom_type_script = "uid://dtspxlqtx4urm"
 
-[node name="Options" type="CenterContainer" parent="CanvasGroup/UI"]
+[node name="OptionsUI" parent="CanvasGroup/UI/CenterContainer/AspectRatioContainer" instance=ExtResource("3_18g7d")]
 visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasGroup/UI/Options"]
-custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="CanvasGroup/UI/Options/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "WORK IN PROGRESS"
-horizontal_alignment = 1
-
-[node name="Back" type="Button" parent="CanvasGroup/UI/Options/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "BACK"
-
-[node name="Leaderboard" type="CenterContainer" parent="CanvasGroup/UI"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("4_iotk1")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasGroup/UI/Leaderboard"]
-custom_minimum_size = Vector2(420, 0)
-layout_mode = 2
-theme_override_constants/separation = 40
-
-[node name="TopLabel" type="Label" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 64
-text = "LEADERBOARD (TOP 5)"
-horizontal_alignment = 1
-
-[node name="LapTimeList" type="VBoxContainer" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
-custom_minimum_size = Vector2(420, 0)
-layout_mode = 2
-theme_override_constants/separation = 12
-alignment = 1
-
-[node name="Back" type="Button" parent="CanvasGroup/UI/Leaderboard/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "BACK"
 
 [node name="CycleController" type="Node3D" parent="." node_paths=PackedStringArray("world_environment", "sun_light") groups=["CycleController"]]
 script = ExtResource("3_0k4wn")
@@ -2041,5 +2032,6 @@ max_volume = -1000.0
 vibration_enabled = false
 engine_vibration_strength = 0.05
 
+[editable path="CanvasGroup/UI/CenterContainer/AspectRatioContainer/OptionsUI"]
 [editable path="WindigCircuit"]
 [editable path="VehicleBody3D"]

@@ -21,13 +21,16 @@ config/icon="uid://hxx18wkpkp4g"
 Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
 RacingNakamaClient="*res://api/racing_nakama_client.gd"
 MultiplayerService="*res://multiplayer/multiplayer_service.gd"
-LeaderboardService="*res://api/repositories/leaderboard/leaderboard_service.gd"
+LeaderboardService="*res://api/services/leaderboard/leaderboard_service.gd"
+UserService="*res://api/services/user/user_service.gd"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/stretch/aspect="ignore"
+window/size/resizable=false
+window/size/borderless=true
+window/stretch/mode="canvas_items"
 window/vsync/vsync_mode=0
 
 [editor_plugins]
@@ -38,6 +41,7 @@ enabled=PackedStringArray("res://addons/day_and_night_cycle/plugin.cfg")
 
 folder_colors={
 "res://api/": "red",
+"res://main_menu/": "purple",
 "res://ui/": "blue"
 }
 
@@ -61,7 +65,7 @@ turn_left={
 , Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":0,"axis_value":-1.0,"script":null)
 ]
 }
-accelerate={
+throttle={
 "deadzone": 0.0,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":87,"key_label":0,"unicode":119,"location":0,"echo":false,"script":null)
 , Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":1,"axis_value":-1.0,"script":null)
@@ -108,3 +112,4 @@ common/max_physics_steps_per_frame=16
 [rendering]
 
 anti_aliasing/quality/msaa_3d=3
+anti_aliasing/quality/screen_space_aa=2

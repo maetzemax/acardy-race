@@ -6,15 +6,15 @@ enum VIEWS {
 	OPTIONS,
 }
 
-@onready var menu: CenterContainer = $Menu
+@export var menu: Control
 
-@onready var options: CenterContainer = $Options
-@onready var options_button: Button = $Menu/VBoxContainer/OptionsButton
-@onready var options_back_button: Button = $Options/VBoxContainer/Back
+@export var options: Control
+@export var options_button: Button
+@export var options_back_button: Button
 
-@onready var leaderboard: CenterContainer = $Leaderboard
-@onready var leaderboard_button: Button = $Menu/VBoxContainer/LeaderboardButton
-@onready var leaderboard_back_button: Button = $Leaderboard/VBoxContainer/Back
+@export var leaderboard: Control
+@export var leaderboard_button: Button
+@export var leaderboard_back_button: Button
 
 @export var camera: Camera3D
 

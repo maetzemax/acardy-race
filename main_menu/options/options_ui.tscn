@@ -1,0 +1,297 @@
+[gd_scene load_steps=6 format=3 uid="uid://sdx1eof5jy32"]
+
+[ext_resource type="Script" uid="uid://406uhqbl42b" path="res://main_menu/options/options_ui.gd" id="1_cv1qs"]
+[ext_resource type="Theme" uid="uid://dh2bm71ea5l7o" path="res://ui/themes/main_theme.tres" id="1_wwhht"]
+
+[sub_resource type="DPITexture" id="DPITexture_wwhht"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"7\" fill=\"#fefefe\" fill-opacity=\".75\"/></svg>
+"
+base_scale = 2.0
+
+[sub_resource type="DPITexture" id="DPITexture_krqw3"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"7\" fill=\"#fefefe\"/></svg>
+"
+base_scale = 2.0
+
+[sub_resource type="DPITexture" id="DPITexture_x6rbh"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"7\" fill=\"#fefefe\" fill-opacity=\".37\"/></svg>
+"
+base_scale = 2.0
+
+[node name="OptionsUI" type="Control" node_paths=PackedStringArray("accelerate_value_label", "brake_value_label", "steering_value_label", "throttle_deadzone_slider", "brake_deadzone_slider", "steering_deadzone_slider", "username_line_edit", "resolution_selection", "fullscreen", "antialiasing_method", "antialiasing_quality", "shadow_quality", "save_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_behavior_recursive = 1
+theme = ExtResource("1_wwhht")
+script = ExtResource("1_cv1qs")
+accelerate_value_label = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Throttle/HBoxContainer/Label2")
+brake_value_label = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Brake/HBoxContainer/Label2")
+steering_value_label = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Steering/HBoxContainer/Label2")
+throttle_deadzone_slider = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Throttle/HSlider")
+brake_deadzone_slider = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Brake/HSlider")
+steering_deadzone_slider = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Steering/HSlider")
+username_line_edit = NodePath("CenterBox/VBoxContainer/HBoxContainer/Online/Username/LineEdit")
+resolution_selection = NodePath("CenterBox/VBoxContainer/HBoxContainer/Graphics/Resolution/ResolutionOption")
+fullscreen = NodePath("CenterBox/VBoxContainer/HBoxContainer/Graphics/Resolution/CheckBox")
+antialiasing_method = NodePath("CenterBox/VBoxContainer/HBoxContainer/Graphics/AntialiasingMethod/MethodOption")
+antialiasing_quality = NodePath("CenterBox/VBoxContainer/HBoxContainer/Graphics/AntialiasingQuality/QualityOption")
+shadow_quality = NodePath("CenterBox/VBoxContainer/HBoxContainer/Graphics/Shadows/ShadowOption")
+save_button = NodePath("CenterBox/VBoxContainer/Save")
+
+[node name="CenterBox" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterBox"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterBox/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 128
+
+[node name="Deadzone" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Deadzone" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "DEADZONES"
+horizontal_alignment = 1
+
+[node name="Throttle" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Throttle"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Throttle/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Throttle"
+
+[node name="Label2" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Throttle/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0.1"
+horizontal_alignment = 2
+
+[node name="HSlider" type="HSlider" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Throttle"]
+layout_mode = 2
+size_flags_vertical = 1
+focus_neighbor_bottom = NodePath("../../Brake/HSlider")
+max_value = 1.0
+step = 0.01
+value = 0.1
+scrollable = false
+
+[node name="Brake" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Brake"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Brake/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Brake"
+
+[node name="Label2" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Brake/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0.1"
+horizontal_alignment = 2
+
+[node name="HSlider" type="HSlider" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Brake"]
+layout_mode = 2
+size_flags_vertical = 1
+focus_neighbor_top = NodePath("../../Throttle/HSlider")
+focus_neighbor_bottom = NodePath("../../Steering/HSlider")
+theme_override_icons/grabber = SubResource("DPITexture_wwhht")
+theme_override_icons/grabber_highlight = SubResource("DPITexture_krqw3")
+theme_override_icons/grabber_disabled = SubResource("DPITexture_x6rbh")
+max_value = 1.0
+step = 0.01
+value = 0.1
+scrollable = false
+
+[node name="Steering" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Steering"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Steering/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Steering"
+
+[node name="Label2" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Steering/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0.1"
+horizontal_alignment = 2
+
+[node name="HSlider" type="HSlider" parent="CenterBox/VBoxContainer/HBoxContainer/Deadzone/Steering"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_icons/grabber = SubResource("DPITexture_wwhht")
+theme_override_icons/grabber_highlight = SubResource("DPITexture_krqw3")
+theme_override_icons/grabber_disabled = SubResource("DPITexture_x6rbh")
+max_value = 1.0
+step = 0.01
+value = 0.1
+scrollable = false
+
+[node name="Online" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Online" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Online"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "ONLINE"
+horizontal_alignment = 1
+
+[node name="Username" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Online"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Username" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Online/Username"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Username"
+
+[node name="LineEdit" type="LineEdit" parent="CenterBox/VBoxContainer/HBoxContainer/Online/Username"]
+layout_mode = 2
+placeholder_text = "PeterLustig123"
+
+[node name="Graphics" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Graphics" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "GRAPHICS"
+horizontal_alignment = 1
+
+[node name="Resolution" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Resolution" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics/Resolution"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Resolution"
+
+[node name="ResolutionOption" type="OptionButton" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics/Resolution"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+selected = 1
+fit_to_longest_item = false
+item_count = 3
+popup/item_0/text = "2560x1440"
+popup/item_0/id = 0
+popup/item_1/text = "1920x1080"
+popup/item_1/id = 1
+popup/item_2/text = "1280x720"
+popup/item_2/id = 2
+
+[node name="CheckBox" type="CheckBox" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics/Resolution"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_font_sizes/font_size = 24
+text = "Fullscreen"
+
+[node name="AntialiasingMethod" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Method" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics/AntialiasingMethod"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Antialising Method"
+
+[node name="MethodOption" type="OptionButton" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics/AntialiasingMethod"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+selected = 1
+fit_to_longest_item = false
+item_count = 3
+popup/item_0/text = "Disabled (Fastest)"
+popup/item_0/id = 0
+popup/item_1/text = "FXAA (Faster)"
+popup/item_1/id = 1
+popup/item_2/text = "SMAA (Slower)"
+popup/item_2/id = 2
+
+[node name="AntialiasingQuality" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Quality" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics/AntialiasingQuality"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Anitaliasing Quality"
+
+[node name="QualityOption" type="OptionButton" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics/AntialiasingQuality"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+selected = 1
+fit_to_longest_item = false
+item_count = 4
+popup/item_0/text = "Disabled"
+popup/item_0/id = 0
+popup/item_1/text = "2x"
+popup/item_1/id = 1
+popup/item_2/text = "4x"
+popup/item_2/id = 2
+popup/item_3/text = "8x"
+popup/item_3/id = 3
+
+[node name="Shadows" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Shadows" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics/Shadows"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Shadows"
+
+[node name="ShadowOption" type="OptionButton" parent="CenterBox/VBoxContainer/HBoxContainer/Graphics/Shadows"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+selected = 5
+fit_to_longest_item = false
+item_count = 6
+popup/item_0/text = "Hard"
+popup/item_0/id = 0
+popup/item_1/text = "Very Low"
+popup/item_1/id = 1
+popup/item_2/text = "Low"
+popup/item_2/id = 2
+popup/item_3/text = "Medium"
+popup/item_3/id = 3
+popup/item_4/text = "High"
+popup/item_4/id = 4
+popup/item_5/text = "Ultra"
+popup/item_5/id = 5
+
+[node name="Save" type="Button" parent="CenterBox/VBoxContainer"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../HBoxContainer/Online/Username/LineEdit")
+theme_override_font_sizes/font_size = 48
+text = "SAVE & EXIT"

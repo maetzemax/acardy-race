@@ -11,7 +11,7 @@ static var best_sector_times
 
 
 func _ready():
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.5).timeout
 	get_global_best_time()
 	get_personal_best_time()
 

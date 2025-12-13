@@ -1,12 +1,12 @@
 extends Control
 
-@onready var lap_time_list: VBoxContainer = $VBoxContainer/LapTimeList
+@onready var lap_time_list: VBoxContainer = $LapTimeList
 
 var entries: Array[LeaderboardEntry] = []
 
 
 func _ready():
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.2).timeout
 	entries = await LeaderboardService.get_global_best_times(5)
 	
 	if entries.size() < 1:

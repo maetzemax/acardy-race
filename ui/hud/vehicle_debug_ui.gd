@@ -73,7 +73,7 @@ func _process(delta):
 	else:
 		delta_label.add_theme_color_override("font_color", Color.WHITE)
 
-	throttle_bar.value = Input.get_action_strength("accelerate") * 100.0
+	throttle_bar.value = Input.get_action_strength("throttle") * 100.0
 	brake_bar.value = Input.get_action_strength("brake") * 100.0
 	
 	# Lenkung (-100 bis +100, zeigen wir als 0-100 mit Mitte bei 50)
@@ -109,7 +109,7 @@ func _maybe_trigger_delta_flash(delta_value: float) -> void:
 		delta_initialized = true
 		last_delta_value = delta_value
 		delta_display_timer = 3.0
-		if delta_label and is_zero_approx(delta_value):
+		if delta_label:
 			delta_label.visible = true
 
 
