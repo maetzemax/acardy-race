@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=4 uid="uid://dcxtxmgptjavb"]
 
-[ext_resource type="Texture2D" uid="uid://lb4hnvuake4s" path="res://forest/color_1024x1024.jpg" id="1_n5y0q"]
+[ext_resource type="Texture2D" uid="uid://lb4hnvuake4s" path="res://assets/forest/color_1024x1024.jpg" id="1_n5y0q"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rsxby"]
 resource_name = "tree_color"

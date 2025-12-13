@@ -34,7 +34,7 @@ func _process(delta: float) -> void:
 		
 
 func _on_checkpoint_crossed(crossing_vehicle: Node3D, index: int):
-	if crossing_vehicle != vehicle and not is_invalid_time:
+	if crossing_vehicle != vehicle or is_invalid_time:
 		return
 		
 	current_sector_times.append(current_lap_time)

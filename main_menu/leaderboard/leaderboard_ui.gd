@@ -6,7 +6,7 @@ var entries: Array[LeaderboardEntry] = []
 
 
 func _ready():
-	await get_tree().create_timer(0.2).timeout
+	await get_tree().create_timer(0.5).timeout
 	entries = await LeaderboardService.get_global_best_times(5)
 	
 	if entries.size() < 1:

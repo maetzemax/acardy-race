@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dtq31glbvy08p"
-path="res://.godot/imported/uploads_files_3304599_LowPoly_Tree_Collection_01_fbx.FBX-35bf857bc70b50248c816e78d4cd3303.scn"
+path="res://.godot/imported/uploads_files_3304599_LowPoly_Tree_Collection_01_fbx.FBX-0e9c2b1e1c4f1283bfec7509010ce26e.scn"
 
 [deps]
 
-source_file="res://forest/uploads_files_3304599_LowPoly_Tree_Collection_01_fbx.FBX"
-dest_files=["res://.godot/imported/uploads_files_3304599_LowPoly_Tree_Collection_01_fbx.FBX-35bf857bc70b50248c816e78d4cd3303.scn"]
+source_file="res://assets/forest/uploads_files_3304599_LowPoly_Tree_Collection_01_fbx.FBX"
+dest_files=["res://.godot/imported/uploads_files_3304599_LowPoly_Tree_Collection_01_fbx.FBX-0e9c2b1e1c4f1283bfec7509010ce26e.scn"]
 
 [params]
 

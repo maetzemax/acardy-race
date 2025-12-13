@@ -20,7 +20,6 @@ config/icon="uid://hxx18wkpkp4g"
 
 Nakama="*res://addons/com.heroiclabs.nakama/Nakama.gd"
 RacingNakamaClient="*res://api/racing_nakama_client.gd"
-MultiplayerService="*res://multiplayer/multiplayer_service.gd"
 LeaderboardService="*res://api/services/leaderboard/leaderboard_service.gd"
 UserService="*res://api/services/user/user_service.gd"
 
@@ -42,7 +41,9 @@ enabled=PackedStringArray("res://addons/day_and_night_cycle/plugin.cfg")
 folder_colors={
 "res://api/": "red",
 "res://main_menu/": "purple",
-"res://ui/": "blue"
+"res://track/": "orange",
+"res://ui/": "blue",
+"res://vehicle/": "green"
 }
 
 [global_group]
@@ -97,6 +98,16 @@ shift_down={
 "events": [Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":5,"pressure":0.0,"pressed":true,"script":null)
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":81,"key_label":0,"unicode":113,"location":0,"echo":false,"script":null)
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":9,"pressure":0.0,"pressed":true,"script":null)
+]
+}
+toggle_reverse={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":82,"key_label":0,"unicode":114,"location":0,"echo":false,"script":null)
+]
+}
+switch_perspective={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":3,"pressure":0.0,"pressed":true,"script":null)
 ]
 }
 
