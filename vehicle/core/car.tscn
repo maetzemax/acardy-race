@@ -855,20 +855,18 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_txq03")
 
-[node name="VehicleBody3D" type="VehicleBody3D" node_paths=PackedStringArray("transmission")]
+[node name="VehicleBody3D" type="VehicleBody3D" node_paths=PackedStringArray("transmission", "cockpit_camera")]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 0)
 mass = 798.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.25, 0.4)
 script = ExtResource("1_k61xc")
-acceleration = 250.0
+acceleration = 380.0
 transmission = NodePath("VehicleTransmission")
-use_automatic_transmission = false
 steering_speed = 1.2
-normal_brake_force = 10.0
+normal_brake_force = 15.0
 suspension_stiff_value = 180.0
-min_volume = -25.0
-max_volume = -20.0
+cockpit_camera = NodePath("CockpitCam")
 
 [node name="VehicleTransmission" type="Node" parent="."]
 script = ExtResource("2_hev5d")
@@ -1002,7 +1000,7 @@ shape = SubResource("BoxShape3D_kek77")
 [node name="WheelFrontLeft" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.45, 2.1970396)
 use_as_steering = true
-wheel_radius = 0.46
+wheel_radius = 0.37
 wheel_rest_length = 0.1
 suspension_travel = 0.06
 suspension_stiffness = 50.0
@@ -1012,19 +1010,19 @@ damping_relaxation = 11.0
 script = ExtResource("2_06lh1")
 
 [node name="FL_Tire_Dark Black_0" type="MeshInstance3D" parent="WheelFrontLeft"]
-transform = Transform3D(0.5, 0, 2.1855694e-08, -2.1855694e-08, 1.39823515e-14, 0.5, 0, -0.5, 1.39823515e-14, 0, 0, 0)
+transform = Transform3D(0.4, 4.889504e-22, 2.1372699e-29, 0, -1.7484556e-08, 0.4, 4.889504e-22, -0.4, -1.7484556e-08, 0.20000005, 0, 0)
 mesh = SubResource("ArrayMesh_llccu")
 skeleton = NodePath("")
 
 [node name="FL_Tire_Bloody Red_0" type="MeshInstance3D" parent="WheelFrontLeft"]
-transform = Transform3D(0.5, 0, 2.1855694e-08, -2.1855694e-08, 1.39823515e-14, 0.5, 0, -0.5, 1.39823515e-14, 0, 0, 0)
+transform = Transform3D(0.4, 4.889504e-22, 2.1372699e-29, 0, -1.7484556e-08, 0.4, 4.889504e-22, -0.4, -1.7484556e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_qo2qb")
 skeleton = NodePath("")
 
 [node name="WheelFrontRight" type="VehicleWheel3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.45, 2.196766)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.99999994, 0.45, 2.196766)
 use_as_steering = true
-wheel_radius = 0.46
+wheel_radius = 0.37
 wheel_rest_length = 0.1
 suspension_travel = 0.06
 suspension_stiffness = 50.0
@@ -1034,19 +1032,19 @@ damping_relaxation = 11.0
 script = ExtResource("2_06lh1")
 
 [node name="FR_Tire_Dark Black_0" type="MeshInstance3D" parent="WheelFrontRight"]
-transform = Transform3D(0.5, 0, -2.1855694e-08, 2.1855694e-08, 1.39823515e-14, 0.5, 0, -0.5, 1.39823515e-14, 0, 0, 0)
+transform = Transform3D(0.4, -4.889504e-22, -2.1372699e-29, 0, -1.7484556e-08, 0.4, -4.889504e-22, -0.4, -1.7484556e-08, -0.099999964, 0, 0)
 mesh = SubResource("ArrayMesh_4ylxs")
 skeleton = NodePath("")
 
 [node name="FR_Tire_Bloody Red_0" type="MeshInstance3D" parent="WheelFrontRight"]
-transform = Transform3D(0.5, 0, -2.1855694e-08, 2.1855694e-08, 1.39823515e-14, 0.5, 0, -0.5, 1.39823515e-14, 0, 0, 0)
+transform = Transform3D(0.4, -4.889504e-22, -2.1372699e-29, 0, -1.7484556e-08, 0.4, -4.889504e-22, -0.4, -1.7484556e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_54erf")
 skeleton = NodePath("")
 
 [node name="WheelRearLeft" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.90000004, 0.45, -1.4509792)
 use_as_traction = true
-wheel_radius = 0.46
+wheel_radius = 0.37
 wheel_rest_length = 0.1
 suspension_travel = 0.06
 suspension_stiffness = 50.0
@@ -1057,19 +1055,19 @@ script = ExtResource("2_06lh1")
 is_back_wheel = true
 
 [node name="RL_Tire_Dark Black_0" type="MeshInstance3D" parent="WheelRearLeft"]
-transform = Transform3D(0.5, 0, 2.1855694e-08, -2.1855694e-08, 1.39823515e-14, 0.5, 0, -0.5, 1.39823515e-14, 0, 0, 0)
+transform = Transform3D(0.4, 4.889504e-22, 2.1372699e-29, 0, -1.7484556e-08, 0.4, 4.889504e-22, -0.4, -1.7484556e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_8ooky")
 skeleton = NodePath("")
 
 [node name="RL_Tire_Bloody Red_0" type="MeshInstance3D" parent="WheelRearLeft"]
-transform = Transform3D(0.5, 0, 2.1855694e-08, -2.1855694e-08, 1.39823515e-14, 0.5, 0, -0.5, 1.39823515e-14, 0, 0, 0)
+transform = Transform3D(0.4, 4.889504e-22, 2.1372699e-29, 0, -1.7484556e-08, 0.4, 4.889504e-22, -0.4, -1.7484556e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_c8ip6")
 skeleton = NodePath("")
 
 [node name="WheelRearRight" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8999999, 0.45, -1.4509791)
 use_as_traction = true
-wheel_radius = 0.46
+wheel_radius = 0.37
 wheel_rest_length = 0.1
 suspension_travel = 0.06
 suspension_stiffness = 50.0
@@ -1080,12 +1078,12 @@ script = ExtResource("2_06lh1")
 is_back_wheel = true
 
 [node name="RR_Tire_Dark Black_0" type="MeshInstance3D" parent="WheelRearRight"]
-transform = Transform3D(0.5, 0, -2.1855694e-08, 2.1855694e-08, 1.39823515e-14, 0.5, 0, -0.5, 1.39823515e-14, 0, 0, 0)
+transform = Transform3D(0.4, -4.889504e-22, -2.1372699e-29, 0, -1.7484556e-08, 0.4, -4.889504e-22, -0.4, -1.7484556e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_syo2g")
 skeleton = NodePath("")
 
 [node name="RR_Tire_Bloody Red_0" type="MeshInstance3D" parent="WheelRearRight"]
-transform = Transform3D(0.5, 0, -2.1855694e-08, 2.1855694e-08, 1.39823515e-14, 0.5, 0, -0.5, 1.39823515e-14, 0, 0, 0)
+transform = Transform3D(0.4, -4.889504e-22, -2.1372699e-29, 0, -1.7484556e-08, 0.4, -4.889504e-22, -0.4, -1.7484556e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_l40w8")
 skeleton = NodePath("")
 
@@ -1106,3 +1104,8 @@ visible = false
 light_energy = 15.0
 spot_range = 60.0
 script = ExtResource("4_06lh1")
+
+[node name="CockpitCam" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, 8.940697e-08, 0, 1, 0, -8.940697e-08, 0, -1, 1.1385376e-08, 0.9299998, 0.6218277)
+visible = false
+fov = 84.5

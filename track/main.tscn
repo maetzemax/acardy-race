@@ -63,8 +63,8 @@ volumetric_fog_density = 0.01
 volumetric_fog_length = 128.0
 
 [sub_resource type="Gradient" id="Gradient_2cqfq"]
-offsets = PackedFloat32Array(0, 0.5, 1)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1)
+offsets = PackedFloat32Array(0.4, 0.6, 0.8)
+colors = PackedColorArray(0, 0.87455684, 0, 1, 1, 0.62295496, 0, 1, 1, 0, 0, 1)
 metadata/_snap_enabled = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vivmo"]
@@ -266,7 +266,6 @@ last_time_label = NodePath("MarginContainer/MarginContainer/VBoxContainer/LastTi
 delta_label = NodePath("Laptime/VBoxContainer/Delta")
 gear_label = NodePath("Tachometer/MarginContainer2/VBoxContainer/HBoxContainer/GearLabel")
 rpm_label = NodePath("Tachometer/MarginContainer2/VBoxContainer/HBoxContainer/RPMLabel")
-max_speed_display = 200.0
 
 [node name="Laptime" type="MarginContainer" parent="CanvasLayer/UI/Debug"]
 layout_mode = 1
@@ -2234,13 +2233,7 @@ target = NodePath("../VehicleBody3D")
 [node name="VehicleBody3D" parent="." node_paths=PackedStringArray("cockpit_camera", "chase_camera") instance=ExtResource("1_fyij8")]
 transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, 116, 7.357322, -70)
 collision_mask = 3
-engine_vibration_strength = 0.05
-cockpit_camera = NodePath("CockpitCam")
+cockpit_camera = NodePath("")
 chase_camera = NodePath("../ChaseCam")
-
-[node name="CockpitCam" type="Camera3D" parent="VehicleBody3D"]
-transform = Transform3D(-1, 0, 8.940697e-08, 0, 1, 0, -8.940697e-08, 0, -1, 1.1385376e-08, 0.9299998, 0.6218277)
-visible = false
-fov = 84.5
 
 [editable path="WindigCircuit"]

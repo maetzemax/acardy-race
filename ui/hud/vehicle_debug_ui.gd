@@ -20,8 +20,6 @@ extends Control
 @export var gear_label: Label
 @export var rpm_label: Label
 
-@export var max_speed_display: float = 350.0
-
 var delta_display_timer: float = 0.0
 var delta_initialized: bool = false
 var last_delta_value: float = 0.0
@@ -64,8 +62,8 @@ func _process(delta):
 	var speed_kmh = speed_ms * 3.6
 	speed_label.text = "%d" % speed_kmh
 	if speed_gauge:
-		speed_gauge.max_value = max_speed_display
-		speed_gauge.value = clamp(speed_kmh, 0.0, max_speed_display)
+		speed_gauge.max_value = vehicle.transmission.max_rpm
+		speed_gauge.value = clamp(vehicle.transmission.get_current_rpm(), 0.0, vehicle.transmission.max_rpm)
 	
 	delta_label.text = ("+" if LeaderboardService.current_delta > 0 else "-") + _format_time(abs(LeaderboardService.current_delta))
 	
