@@ -60,6 +60,7 @@ var current_engine_rpm: float = 0.0
 
 func _ready():
 	set_input_deadzones()
+	set_driver_aids()
 
 
 func _physics_process(delta: float):
@@ -206,10 +207,22 @@ func _apply_deadzone_remap(input_value: float, deadzone: float) -> float:
 
 func set_input_deadzones():
 	var deadzone: DeadzoneSettings = OptionsService.get_deadzone_settings()
+	
+	if not deadzone:
+		return
+	
 	input_throttle_deadzone = deadzone.throttle
 	input_brake_deadzone = deadzone.brake
 	input_steering_deadzone = deadzone.steer
 
+
+func set_driver_aids():
+	var driver_aids: DriverAidSettings = OptionsService.get_driver_aid_settings()
+	
+	if not driver_aids:
+		return
+	
+	use_automatic_transmission = driver_aids.shift_assistant
 
 func is_off_track() -> bool:
 	return wheel_front_left.is_off_track and wheel_front_right.is_off_track and wheel_rear_left.is_off_track and wheel_rear_right.is_off_track

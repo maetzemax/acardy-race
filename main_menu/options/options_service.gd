@@ -54,3 +54,21 @@ static func get_graphic_settings() -> GraphicSettings:
 		)
 	else:
 		return null
+
+
+static func set_driver_aid_settings(driver_aid: DriverAidSettings):
+	var config = ConfigFile.new()
+	config.set_value("driver_aid", "shift_assistant", driver_aid.shift_assistant)
+	config.save("user://driver_aid_settings.cfg")
+
+
+static func get_driver_aid_settings() -> DriverAidSettings:
+	var config = ConfigFile.new()
+	var err = config.load("user://driver_aid_settings.cfg")
+	
+	if err == OK:
+		var shift_assistant = config.get_value("driver_aid", "shift_assistant", true)
+			
+		return DriverAidSettings.new(shift_assistant)
+	else:
+		return null
