@@ -89,12 +89,8 @@ func apply_wheel_physics(car: RayCastCar) -> void:
 		grip_factor = 0.0
 	var x_traction = grip_curve.sample_baked(grip_factor)
 
-	if not car.hand_break and grip_factor < 0.2:
-		car.is_slipping = false
-	if car.hand_break:
-		x_traction = 0.01
-	elif car.is_slipping:
-		x_traction = 0.1
+	if car.is_slipping:
+		x_traction = 0.2
 
 
 	var gravity = -car.get_gravity().y

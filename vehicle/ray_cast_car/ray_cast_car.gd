@@ -5,15 +5,15 @@ var throttle: float = 0.0
 var steering_input: float = 0.0
 
 @export_group("Engine")
-@export var acceleration := 600.0
-@export var max_speed := 20.0
-@export var accel_curve : Curve
+@export var acceleration = 4000.0
+@export var max_speed = 80.0
+@export var accel_curve: Curve
 
 @export_group("Steering")
 @export var wheels: Array[RayCastWheel]
 @export var skid_marks: Array[GPUParticles3D]
-@export var tire_turn_speed := 2.0
-@export var tire_max_turn_degrees := 25
+@export var tire_turn_speed = 0.7
+@export var tire_max_turn_degrees = 8.0
 
 @export_group("Engine Sound")
 @export var min_pitch: float = 0.8
@@ -45,8 +45,8 @@ var last_collision_impulse: float = 0.0
 var current_engine_rpm: float = 0.0
 
 var motor_input: float = 0
-var hand_break := false
-var is_slipping := false
+var hand_break = false
+var is_slipping = false
 
 
 func _get_point_velocity(point: Vector3) -> Vector3:
@@ -84,8 +84,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		motor_input = 0
 
-	var id := 0
-	var grounded := false
+	var id = 0
+	var grounded = false
 	for wheel in wheels:
 		wheel.apply_wheel_physics(self)
 		_basic_steering_rotation(wheel, delta)
@@ -95,10 +95,12 @@ func _physics_process(delta: float) -> void:
 		# Skid marks
 		skid_marks[id].global_position = wheel.get_collision_point() + Vector3.UP * 0.01
 		skid_marks[id].look_at(skid_marks[id].global_position + global_basis.z)
-
+		
 		if not hand_break and wheel.grip_factor < 0.2:
 			is_slipping = false
 			skid_marks[id].emitting = false
+		elif not hand_break and wheel.grip_factor < 0.35:
+			skid_marks[id].emitting = true
 
 		if hand_break and not skid_marks[id].emitting:
 			skid_marks[id].emitting = true
