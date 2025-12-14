@@ -82,9 +82,12 @@ func _process(delta):
 	brake_bar.value = Input.get_action_strength("brake") * 100.0
 	
 	# Lenkung (-100 bis +100, zeigen wir als 0-100 mit Mitte bei 50)
-	#if vehicle.steering:
-		#var steering_percent = (vehicle.steering / vehicle.max_steering_angle) * 50.0 + 50.0
-		#steering_bar.value = steering_percent
+	if vehicle.steering_input:
+		var steering_percent = 50.0 - (2 * vehicle.steering_input) * 25
+		steering_bar.value = steering_percent
+	else:
+		steering_bar.value = 50
+		
 		#
 	#if vehicle.transmission:
 		#var transmission: VehicleTransmission = vehicle.transmission

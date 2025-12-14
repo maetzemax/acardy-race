@@ -1,10 +1,10 @@
 [gd_scene load_steps=61 format=4 uid="uid://dscrpipchqrh3"]
 
-[ext_resource type="Script" uid="uid://c43ohah683tc5" path="res://vehicle/core/vehicle.gd" id="1_k61xc"]
-[ext_resource type="Script" uid="uid://dohpnaotaj177" path="res://vehicle/core/wheel.gd" id="2_06lh1"]
-[ext_resource type="Script" uid="uid://dap65ccbcbapd" path="res://vehicle/core/vehicle_transmission.gd" id="2_hev5d"]
+[ext_resource type="Script" uid="uid://c43ohah683tc5" path="res://vehicle/physics_car/vehicle.gd" id="1_k61xc"]
+[ext_resource type="Script" uid="uid://dohpnaotaj177" path="res://vehicle/physics_car/wheel.gd" id="2_06lh1"]
+[ext_resource type="Script" uid="uid://dap65ccbcbapd" path="res://vehicle/physics_car/vehicle_transmission.gd" id="2_hev5d"]
 [ext_resource type="AudioStream" uid="uid://cymmlmmve8ce4" path="res://assets/sounds/car-idle-1-blyth-21-6-12-62010.mp3" id="3_td361"]
-[ext_resource type="Script" uid="uid://hfvqwpuxf1iv" path="res://vehicle/car_lamp.gd" id="4_06lh1"]
+[ext_resource type="Script" uid="uid://hfvqwpuxf1iv" path="res://vehicle/physics_car/car_lamp.gd" id="4_06lh1"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f0xq4"]
 resource_name = "BaseColor"
