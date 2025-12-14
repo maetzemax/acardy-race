@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://d115gn4krhqf5" path="res://assets/tracks/WindigCircuit.glb" id="1_fu7sn"]
 [ext_resource type="Script" uid="uid://7rifa2h88dt3" path="res://main_menu/core/main_menu_ui.gd" id="2_j5v2v"]
-[ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/core/car.tscn" id="2_jix8l"]
+[ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/physics_car/car.tscn" id="2_jix8l"]
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="3_0k4wn"]
 [ext_resource type="PackedScene" uid="uid://sdx1eof5jy32" path="res://main_menu/options/options_ui.tscn" id="3_18g7d"]
 [ext_resource type="Theme" uid="uid://dh2bm71ea5l7o" path="res://ui/themes/main_theme.tres" id="3_jix8l"]

@@ -224,6 +224,7 @@ func set_driver_aids():
 	
 	use_automatic_transmission = driver_aids.shift_assistant
 
+
 func is_off_track() -> bool:
 	return wheel_front_left.is_off_track and wheel_front_right.is_off_track and wheel_rear_left.is_off_track and wheel_rear_right.is_off_track
 

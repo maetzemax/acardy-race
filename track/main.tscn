@@ -344,6 +344,7 @@ horizontal_alignment = 1
 vertical_alignment = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/Debug/Tachometer/MarginContainer2/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 40
 alignment = 1
@@ -2207,7 +2208,8 @@ script = ExtResource("6_88iea")
 target = NodePath("../RayCastCar")
 default_offset = Vector3(0, 2.5, 5)
 
-[node name="RayCastCar" parent="." instance=ExtResource("16_fyij8")]
+[node name="RayCastCar" parent="." node_paths=PackedStringArray("chase_camera") instance=ExtResource("16_fyij8")]
 transform = Transform3D(-0.52205205, 0, 0.8529136, 0, 1, 0, -0.8529136, 0, -0.52205205, 116.22505, 8.76048, -70.390816)
+chase_camera = NodePath("../ChaseCam")
 
 [editable path="WindigCircuit"]
