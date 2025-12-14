@@ -1,5 +1,5 @@
 extends Node
-@export var vehicle: VehicleBody3D
+@export var vehicle: Node3D
 
 var current_sector_times: Array[float]
 var current_lap_time: float = 0.0
@@ -23,9 +23,9 @@ func _ready():
 
 func _process(delta: float) -> void:
 	if lap_started and not is_invalid_time:
-		if vehicle.is_off_track():
-			is_invalid_time = true
-			return
+		#if vehicle.is_off_track():
+			#is_invalid_time = true
+			#return
 		
 		current_lap_time += delta
 	

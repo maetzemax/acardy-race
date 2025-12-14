@@ -2021,16 +2021,9 @@ transform = Transform3D(-0.39073086, 0.015139287, -0.9203803, -1.3969839e-09, 0.
 
 [node name="VehicleBody3D" parent="." instance=ExtResource("2_jix8l")]
 transform = Transform3D(-0.5427436, 0.050427955, 0.83838314, 0.052318025, 0.99828726, -0.02617695, -0.83826727, 0.029655173, -0.5444524, -12.45679, 3.144757, 69.201775)
-axis_lock_linear_x = true
-axis_lock_linear_y = true
-axis_lock_linear_z = true
-axis_lock_angular_x = true
-axis_lock_angular_y = true
-axis_lock_angular_z = true
+freeze = true
 min_volume = -1000.0
 max_volume = -1000.0
-vibration_enabled = false
-engine_vibration_strength = 0.05
 
 [editable path="CanvasGroup/UI/CenterContainer/AspectRatioContainer/OptionsUI"]
 [editable path="WindigCircuit"]

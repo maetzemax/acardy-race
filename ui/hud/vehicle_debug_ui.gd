@@ -2,7 +2,7 @@ extends Control
 
 ## Debug UI für Fahrzeug-Informationen
 @export var laptimer: Node3D
-@export var vehicle: VehicleBody3D
+@export var vehicle: RigidBody3D
 
 # UI Elemente
 @export var speed_label: Label
@@ -62,8 +62,12 @@ func _process(delta):
 	var speed_kmh = speed_ms * 3.6
 	speed_label.text = "%d" % speed_kmh
 	if speed_gauge:
-		speed_gauge.max_value = vehicle.transmission.max_rpm
-		speed_gauge.value = clamp(vehicle.transmission.get_current_rpm(), 0.0, vehicle.transmission.max_rpm)
+		speed_gauge.max_value = 200
+		speed_gauge.value = clamp(speed_kmh, 0.0, 200)
+	
+	#if speed_gauge:
+		#speed_gauge.max_value = vehicle.transmission.max_rpm
+		#speed_gauge.value = clamp(vehicle.transmission.get_current_rpm(), 0.0, vehicle.transmission.max_rpm)
 	
 	delta_label.text = ("+" if LeaderboardService.current_delta > 0 else "-") + _format_time(abs(LeaderboardService.current_delta))
 	
@@ -78,14 +82,14 @@ func _process(delta):
 	brake_bar.value = Input.get_action_strength("brake") * 100.0
 	
 	# Lenkung (-100 bis +100, zeigen wir als 0-100 mit Mitte bei 50)
-	if vehicle.steering:
-		var steering_percent = (vehicle.steering / vehicle.max_steering_angle) * 50.0 + 50.0
-		steering_bar.value = steering_percent
-		
-	if vehicle.transmission:
-		var transmission: VehicleTransmission = vehicle.transmission
-		rpm_label.text = "RPM: %d" % transmission.get_current_rpm() + " / %d" % transmission.max_rpm
-		gear_label.text = "Gear: " +  transmission.get_gear_display()
+	#if vehicle.steering:
+		#var steering_percent = (vehicle.steering / vehicle.max_steering_angle) * 50.0 + 50.0
+		#steering_bar.value = steering_percent
+		#
+	#if vehicle.transmission:
+		#var transmission: VehicleTransmission = vehicle.transmission
+		#rpm_label.text = "RPM: %d" % transmission.get_current_rpm() + " / %d" % transmission.max_rpm
+		#gear_label.text = "Gear: " +  transmission.get_gear_display()
 
 
 func _format_time(time_seconds: float) -> String:

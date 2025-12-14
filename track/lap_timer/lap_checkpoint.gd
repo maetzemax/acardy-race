@@ -12,7 +12,7 @@ func _ready():
 
 
 func _on_body_entered(body: Node3D):
-	if body is VehicleBody3D:
+	if body is RigidBody3D:
 		if is_start_finish:
 			lap_completed.emit(body)
 		else:
