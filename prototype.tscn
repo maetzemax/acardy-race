@@ -1,0 +1,118 @@
+[gd_scene load_steps=9 format=3 uid="uid://cvya851eoy26t"]
+
+[ext_resource type="PackedScene" uid="uid://dyg4sfr52ad71" path="res://vehicle/ray_cast_car/ray_cast_car.tscn" id="2_883nb"]
+[ext_resource type="Script" uid="uid://cc23jnt5cf5bs" path="res://camera/follow_camera.gd" id="2_vo8sw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vo8sw"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_883nb"]
+sky_material = SubResource("ProceduralSkyMaterial_vo8sw")
+
+[sub_resource type="Environment" id="Environment_7fmhn"]
+background_mode = 2
+sky = SubResource("Sky_883nb")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_mbk3n"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1ixuk"]
+albedo_color = Color(0.23137255, 0.18039216, 0.14117648, 1)
+metallic_specular = 0.0
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_883nb"]
+data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
+
+[node name="Prototype" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_7fmhn")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1000, 0, 0, 0, 1000, 0, 0, 0, 1000, 0, 0, 0)
+mesh = SubResource("PlaneMesh_mbk3n")
+surface_material_override/0 = SubResource("StandardMaterial3D_1ixuk")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_883nb")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+text = "100 kmh"
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4195333, 12.771467)
+use_collision = true
+size = Vector3(1, 7.7263184, 1)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4195333, -8.228533)
+use_collision = true
+size = Vector3(1, 7.7263184, 1)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4195333, -16.228533)
+use_collision = true
+size = Vector3(1, 7.7263184, 1)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4195333, -26.228533)
+use_collision = true
+size = Vector3(1, 7.7263184, 1)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4195333, -38.22853)
+use_collision = true
+size = Vector3(1, 7.7263184, 1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4195333, -44.22853)
+use_collision = true
+size = Vector3(1, 7.7263184, 1)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4195333, -53.22853)
+use_collision = true
+size = Vector3(1, 7.7263184, 1)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4195333, -62.22853)
+use_collision = true
+size = Vector3(1, 7.7263184, 1)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 3.4195333, -62.22853)
+use_collision = true
+size = Vector3(1, 7.7263184, 1)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.9702958, 0, 0.24192181, 0, 1, 0, -0.24192181, 0, -0.9702958, 0, 3.8459048, -4.915363)
+script = ExtResource("2_vo8sw")
+default_offset = Vector3(0, 2.5, 5)
+speed_adaptive_smoothing = false
+zoom_max = 100.0
+
+[node name="RayCastCar" parent="." instance=ExtResource("2_883nb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

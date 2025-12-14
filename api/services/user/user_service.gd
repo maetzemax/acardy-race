@@ -1,7 +1,9 @@
 extends Node
 
+
 func get_username() -> String:
 	return RacingNakamaClient.user.username
+
 
 func set_username(username):
 	var response = await RacingNakamaClient.client.update_account_async(

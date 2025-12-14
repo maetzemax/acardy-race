@@ -18,7 +18,7 @@ _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\">
 "
 base_scale = 2.0
 
-[node name="OptionsUI" type="Control" node_paths=PackedStringArray("accelerate_value_label", "brake_value_label", "steering_value_label", "throttle_deadzone_slider", "brake_deadzone_slider", "steering_deadzone_slider", "username_line_edit", "resolution_selection", "fullscreen", "antialiasing_method", "antialiasing_quality", "shadow_quality", "save_button")]
+[node name="OptionsUI" type="Control" node_paths=PackedStringArray("accelerate_value_label", "brake_value_label", "steering_value_label", "throttle_deadzone_slider", "brake_deadzone_slider", "steering_deadzone_slider", "shift_assistant", "username_line_edit", "resolution_selection", "fullscreen", "antialiasing_method", "antialiasing_quality", "shadow_quality", "save_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,6 +34,7 @@ steering_value_label = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/
 throttle_deadzone_slider = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Throttle/HSlider")
 brake_deadzone_slider = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Brake/HSlider")
 steering_deadzone_slider = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Steering/HSlider")
+shift_assistant = NodePath("CenterBox/VBoxContainer/HBoxContainer/DriverAids/ShiftAssistant/CheckBox")
 username_line_edit = NodePath("CenterBox/VBoxContainer/HBoxContainer/Online/Username/LineEdit")
 resolution_selection = NodePath("CenterBox/VBoxContainer/HBoxContainer/Graphics/Resolution/ResolutionOption")
 fullscreen = NodePath("CenterBox/VBoxContainer/HBoxContainer/Graphics/Resolution/CheckBox")
@@ -154,6 +155,26 @@ max_value = 1.0
 step = 0.01
 value = 0.1
 scrollable = false
+
+[node name="DriverAids" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="DriverAids" type="Label" parent="CenterBox/VBoxContainer/HBoxContainer/DriverAids"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "DRIVER AIDS"
+horizontal_alignment = 1
+
+[node name="ShiftAssistant" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/DriverAids"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CheckBox" type="CheckBox" parent="CenterBox/VBoxContainer/HBoxContainer/DriverAids/ShiftAssistant"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_font_sizes/font_size = 24
+text = "Shift Assistant"
 
 [node name="Online" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer"]
 layout_mode = 2

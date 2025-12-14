@@ -1,6 +1,6 @@
 extends Control
 
-#region Deadzone
+#region DeadzoneSettings
 @export var accelerate_value_label: Label
 @export var brake_value_label: Label
 @export var steering_value_label: Label
@@ -14,14 +14,18 @@ var brake_deadzone: float = 0.1
 var steering_deadzone: float = 0.1
 #endregion
 
+@export var shift_assistant: CheckBox
+
 @export var username_line_edit: LineEdit
 
+#region Graphics
 @export var resolution_selection: OptionButton
 @export var fullscreen: CheckBox
 
 @export var antialiasing_method: OptionButton
 @export var antialiasing_quality: OptionButton
 @export var shadow_quality: OptionButton
+#endregion
 
 @export var save_button: Button
 
@@ -37,6 +41,7 @@ func _ready():
 	
 	_load_deadzone()
 	_load_graphics()
+	_load_driver_aids()
 	
 	await get_tree().create_timer(0.5).timeout
 	username_line_edit.text = UserService.get_username()
@@ -55,7 +60,7 @@ func _process(_delta):
 
 
 func _on_save():
-	var deadzone = Deadzone.new(throttle_deadzone, brake_deadzone, steering_deadzone) 
+	var deadzone = DeadzoneSettings.new(throttle_deadzone, brake_deadzone, steering_deadzone) 
 	OptionsService.set_deadzone_settings(deadzone)
 	
 	if RacingNakamaClient.user.username != username_line_edit.text and username_line_edit.text.length() > 2:
@@ -69,6 +74,11 @@ func _on_save():
 		shadow_quality.get_selected_id()
 	)
 	OptionsService.set_graphic_settings(graphics)
+	
+	var driver_aids = DriverAidSettings.new(
+		shift_assistant.button_pressed
+	)
+	OptionsService.set_driver_aid_settings(driver_aids)
 
 	
 func _on_fullscreen_toggled(toggled_on):
@@ -92,7 +102,6 @@ func _on_shadow_quality_change(index):
 
 func _on_resoulution_change(index):
 	if not fullscreen.button_pressed:
-		
 		match index:
 			0:
 				DisplayServer.window_set_size(Vector2i(2560, 1440))
@@ -106,6 +115,10 @@ func _on_resoulution_change(index):
 
 func _load_deadzone():
 	var deadzone = OptionsService.get_deadzone_settings()
+	
+	if not deadzone:
+		return
+	
 	throttle_deadzone = deadzone.throttle
 	brake_deadzone = deadzone.brake
 	steering_deadzone = deadzone.steer
@@ -121,10 +134,23 @@ func _load_deadzone():
 
 func _load_graphics():
 	var graphics: GraphicSettings = OptionsService.get_graphic_settings()
+	
+	if not graphics:
+		return
+	
 	fullscreen.button_pressed = graphics.is_fullscreen
 	resolution_selection.select(graphics.resolution)
 	_on_resoulution_change(graphics.resolution)
 	antialiasing_method.select(graphics.antialiasing_method)
 	antialiasing_quality.select(graphics.antialiasing_quality)
 	shadow_quality.select(graphics.shadow_quality)
+	
+
+func _load_driver_aids():
+	var driver_aids: DriverAidSettings = OptionsService.get_driver_aid_settings()
+	
+	if not driver_aids:
+		return
+	
+	shift_assistant.button_pressed = driver_aids.shift_assistant
 	

@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://d115gn4krhqf5" path="res://assets/tracks/WindigCircuit.glb" id="1_fu7sn"]
 [ext_resource type="Script" uid="uid://7rifa2h88dt3" path="res://main_menu/core/main_menu_ui.gd" id="2_j5v2v"]
-[ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/core/car.tscn" id="2_jix8l"]
+[ext_resource type="PackedScene" uid="uid://dscrpipchqrh3" path="res://vehicle/physics_car/car.tscn" id="2_jix8l"]
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="3_0k4wn"]
 [ext_resource type="PackedScene" uid="uid://sdx1eof5jy32" path="res://main_menu/options/options_ui.tscn" id="3_18g7d"]
 [ext_resource type="Theme" uid="uid://dh2bm71ea5l7o" path="res://ui/themes/main_theme.tres" id="3_jix8l"]
@@ -2021,16 +2021,9 @@ transform = Transform3D(-0.39073086, 0.015139287, -0.9203803, -1.3969839e-09, 0.
 
 [node name="VehicleBody3D" parent="." instance=ExtResource("2_jix8l")]
 transform = Transform3D(-0.5427436, 0.050427955, 0.83838314, 0.052318025, 0.99828726, -0.02617695, -0.83826727, 0.029655173, -0.5444524, -12.45679, 3.144757, 69.201775)
-axis_lock_linear_x = true
-axis_lock_linear_y = true
-axis_lock_linear_z = true
-axis_lock_angular_x = true
-axis_lock_angular_y = true
-axis_lock_angular_z = true
+freeze = true
 min_volume = -1000.0
 max_volume = -1000.0
-vibration_enabled = false
-engine_vibration_strength = 0.05
 
 [editable path="CanvasGroup/UI/CenterContainer/AspectRatioContainer/OptionsUI"]
 [editable path="WindigCircuit"]
