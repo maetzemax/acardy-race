@@ -5,15 +5,23 @@ var throttle: float = 0.0
 var steering_input: float = 0.0
 
 @export_group("Engine")
-@export var acceleration = 4000.0
-@export var max_speed = 80.0
+@export var acceleration = 3200.0  # Schnellere Beschleunigung für Formel-Auto
+@export var max_speed = 64.0  # ~230 km/h (64 m/s)
 @export var accel_curve: Curve
 
 @export_group("Steering")
 @export var wheels: Array[RayCastWheel]
 @export var skid_marks: Array[GPUParticles3D]
-@export var tire_turn_speed = 0.7
-@export var tire_max_turn_degrees = 8.0
+@export var tire_turn_speed = 1.0  # Etwas langsamer für schwereres Gefühl
+@export var tire_max_turn_degrees = 11.0  # Leicht reduziert
+
+@export_group("Handling")
+@export var front_grip_multiplier: float = 1.4  # Noch mehr Grip vorne!
+@export var rear_grip_multiplier: float = 1.2  # Auch hinten deutlich mehr
+@export var brake_grip_front: float = 1.6
+@export var brake_grip_rear: float = 0.6
+@export var centrifugal_force_multiplier: float = 1.5  # Reduziert - war zu stark
+@export var skid_threshold: float = 0.40
 
 @export_group("Engine Sound")
 @export var min_pitch: float = 0.8
@@ -77,6 +85,9 @@ func _physics_process(delta: float) -> void:
 	_handle_vehicle_control(delta)
 	_handle_engine_sound()
 	
+	# Fliehkraft in Kurven
+	_apply_centrifugal_force()
+	
 	if brake_strength > 0:
 		motor_input = -brake_strength
 	elif throttle > 0:
@@ -92,14 +103,15 @@ func _physics_process(delta: float) -> void:
 
 		wheel.is_braking = brake_strength > 0
 
-		# Skid marks
+		# Skid marks - angepasster Threshold
 		skid_marks[id].global_position = wheel.get_collision_point() + Vector3.UP * 0.01
 		skid_marks[id].look_at(skid_marks[id].global_position + global_basis.z)
 		
-		if not hand_break and wheel.grip_factor < 0.2:
+		if not hand_break and wheel.grip_factor < skid_threshold:  # Geändert von 0.05
 			is_slipping = false
 			skid_marks[id].emitting = false
-		elif not hand_break and wheel.grip_factor < 0.35:
+		elif not hand_break:
+			is_slipping = false
 			skid_marks[id].emitting = true
 
 		if hand_break and not skid_marks[id].emitting:
@@ -111,10 +123,10 @@ func _physics_process(delta: float) -> void:
 		id += 1
 
 	if grounded:
-		center_of_mass = Vector3.ZERO
+		center_of_mass = Vector3(0, -0.1, 0)  # Leicht nach unten = schwerer Gefühl
 	else:
 		center_of_mass_mode = RigidBody3D.CENTER_OF_MASS_MODE_CUSTOM
-		center_of_mass = Vector3.DOWN*0.5
+		center_of_mass = Vector3.DOWN*0.6  # Tiefer für bessere Stabilität in der Luft
 
 
 func _handle_vehicle_control(_delta):
@@ -129,9 +141,6 @@ func _handle_vehicle_control(_delta):
 	throttle = throttle_input
 	brake_strength = brake_input
 	steering_input = steering_raw
-	
-	if Input.is_action_just_pressed("switch_perspective"):
-		next_perspective()
 
 
 func _handle_engine_sound():
@@ -152,7 +161,6 @@ func _handle_engine_sound():
 	var throttle_factor = abs(throttle)
 	var target_volume = lerp(min_volume, max_volume, throttle_factor)
 	engine_sound.volume_db = target_volume
-
 
 
 func _apply_deadzone_remap(input_value: float, deadzone: float) -> float:
@@ -186,3 +194,24 @@ func next_perspective():
 		cockpit_camera.make_current()
 	else:
 		chase_camera.make_current()
+
+
+func _apply_centrifugal_force():
+	# Berechne Fliehkraft basierend auf Geschwindigkeit und Lenkung
+	var speed = linear_velocity.length()
+	
+	if speed < 5.0:  # Nur bei ausreichender Geschwindigkeit
+		return
+	
+	# Berechne die Zentrifugalkraft: F = m * v² / r
+	# r (Kurvenradius) wird über den Lenkwinkel approximiert
+	if abs(steering_input) > 0.1:
+		var lateral_velocity = global_basis.x.dot(linear_velocity)
+		
+		# Zentrifugalkraft nach außen (seitlich)
+		var centrifugal = global_basis.x * lateral_velocity * centrifugal_force_multiplier * speed * abs(steering_input)
+		
+		apply_central_force(centrifugal)
+		
+		if show_debug: 
+			DebugDraw3D.draw_arrow_ray(global_position, centrifugal/mass, 0.5, Color.ORANGE, 0.05)

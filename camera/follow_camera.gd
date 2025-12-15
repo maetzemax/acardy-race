@@ -111,7 +111,7 @@ func _physics_process(delta):
 	global_position = global_position.lerp(target_position, delta * current_smoothing)
 	
 	# Schaue zum Target
-	look_at(target.global_position + Vector3(0, 1.0, 0), Vector3.UP)
+	look_at(target.global_position)
 
 
 func reset_camera():

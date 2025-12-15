@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=4 uid="uid://un1xgkhi1vmp"]
+[gd_scene load_steps=36 format=4 uid="uid://un1xgkhi1vmp"]
 
 [ext_resource type="Script" uid="uid://sqer1ykwxtg5" path="res://addons/day_and_night_cycle/scripts/cycle_controller.gd" id="2_5rf84"]
 [ext_resource type="Resource" uid="uid://cvxw651qwja6o" path="res://addons/day_and_night_cycle/presets/sky_cover/sky_cover_day_cycle.tres" id="3_4scd2"]
@@ -14,13 +14,8 @@
 [ext_resource type="PackedScene" uid="uid://b1nqw28yyul3y" path="res://assets/trees/tree_1.tscn" id="13_qo8wk"]
 [ext_resource type="PackedScene" uid="uid://dcxtxmgptjavb" path="res://assets/trees/tree_3.tscn" id="14_hfui8"]
 [ext_resource type="PackedScene" uid="uid://bn8ioo8001p7y" path="res://assets/trees/tree_4.tscn" id="15_2ad5f"]
-[ext_resource type="Script" uid="uid://o17ncwedrj87" path="res://vehicle/physics_car/scripts/vehicle_controllergd.gd" id="16_4becc"]
-[ext_resource type="PackedScene" uid="uid://30io4a6duxo7" path="res://vehicle/physics_car/scenes/formula_car.tscn" id="16_fyij8"]
+[ext_resource type="PackedScene" uid="uid://dyg4sfr52ad71" path="res://vehicle/ray_cast_car/ray_cast_car.tscn" id="16_fyij8"]
 [ext_resource type="PackedScene" uid="uid://d115gn4krhqf5" path="res://assets/tracks/WindigCircuit.glb" id="16_lf56y"]
-[ext_resource type="PackedScene" uid="uid://h6vdpba71kpr" path="res://vehicle/physics_car/scenes/smoke_effect.tscn" id="18_pxsoe"]
-[ext_resource type="PackedScene" uid="uid://b2hlchrj4h2b7" path="res://vehicle/physics_car/scenes/engine_sound.tscn" id="19_8m4eo"]
-[ext_resource type="Script" uid="uid://bvwfsfpfn44ax" path="res://vehicle/physics_car/scripts/debug.gd" id="21_x1565"]
-[ext_resource type="Script" uid="uid://dmueefx00yw72" path="res://vehicle/physics_car/scripts/debug_ui.gd" id="22_qo8wk"]
 
 [sub_resource type="Gradient" id="Gradient_074og"]
 offsets = PackedFloat32Array(0, 0.1, 0.5, 0.9, 1)
@@ -257,7 +252,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("8_4becc")
 laptimer = NodePath("../../../Laptimer")
-vehicle = NodePath("../../../VehicleController/FormulaCar")
+vehicle = NodePath("../../../RayCastCar")
 speed_label = NodePath("Tachometer/MarginContainer2/VBoxContainer/MarginContainer/Speed Label")
 speed_gauge = NodePath("Tachometer/MarginContainer2/VBoxContainer/MarginContainer/HalfCircleGauge")
 throttle_bar = NodePath("Tachometer/MarginContainer2/VBoxContainer/ThrottleBar")
@@ -489,7 +484,7 @@ checkpoint_number = 1
 
 [node name="Laptimer" type="Node3D" parent="." node_paths=PackedStringArray("vehicle")]
 script = ExtResource("11_cbyld")
-vehicle = NodePath("../VehicleController/FormulaCar")
+vehicle = NodePath("../RayCastCar")
 
 [node name="Environment" type="Node3D" parent="."]
 
@@ -2195,49 +2190,26 @@ skeleton = NodePath("")
 
 [node name="WindigCircuit" parent="." instance=ExtResource("16_lf56y")]
 
-[node name="StaticBody3D" parent="WindigCircuit/Landscape " index="0" groups=["Grass"]]
+[node name="StaticBody3D" parent="WindigCircuit/Landscape " index="0" groups=["grass"]]
 
-[node name="StaticBody3D" parent="WindigCircuit/Track " index="0" groups=["Road"]]
+[node name="StaticBody3D" parent="WindigCircuit/Track " index="0" groups=["track"]]
 
-[node name="StaticBody3D" parent="WindigCircuit/Curbes_Outline " index="0" groups=["Road"]]
+[node name="StaticBody3D" parent="WindigCircuit/Curbes_Outline " index="0" groups=["track"]]
 
-[node name="StaticBody3D" parent="WindigCircuit/Curbes_Inline " index="0" groups=["Road"]]
+[node name="StaticBody3D" parent="WindigCircuit/Curbes_Inline " index="0" groups=["track"]]
 
 [node name="Stands" parent="WindigCircuit" index="12"]
 transform = Transform3D(-0.39073086, 0.015139287, -0.9203803, -1.3969839e-09, 0.99986476, 0.016446723, 0.92050475, 0.0064262454, -0.39067805, 28.133633, 3.5167842, 110.44866)
 
-[node name="VehicleController" type="Node3D" parent="." node_paths=PackedStringArray("vehicle_node")]
-transform = Transform3D(-0.54222155, 0, 0.8402356, 0, 1, 0, -0.8402356, 0, -0.54222155, 116.684, 8.638776, -69.79)
-script = ExtResource("16_4becc")
-vehicle_node = NodePath("FormulaCar")
-metadata/_custom_type_script = "uid://o17ncwedrj87"
-
-[node name="FormulaCar" parent="VehicleController" instance=ExtResource("16_fyij8")]
-automatic_transmission = true
-
-[node name="Smoke2" parent="VehicleController/FormulaCar" node_paths=PackedStringArray("vehicle") instance=ExtResource("18_pxsoe")]
-vehicle = NodePath("..")
-
-[node name="EngineSound2" parent="VehicleController/FormulaCar" node_paths=PackedStringArray("vehicle") instance=ExtResource("19_8m4eo")]
-volume_db = -10.0
-vehicle = NodePath("..")
-
-[node name="Debug" type="Node" parent="." node_paths=PackedStringArray("vehicle")]
-script = ExtResource("21_x1565")
-vehicle = NodePath("../VehicleController/FormulaCar")
-show_debug = false
-
-[node name="DebugUI" type="Control" parent="Debug"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("22_qo8wk")
-
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
-transform = Transform3D(-0.5105429, 0, 0.85985225, 0, 1, 0, -0.85985225, 0, -0.5105429, 119.643, 9.306, -71.57)
+[node name="ChaseCam" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
+transform = Transform3D(-0.49999988, 0, 0.8660255, 0, 1, 0, -0.8660255, 0, -0.49999988, 119.62202, 9.396548, -72.09117)
+fov = 84.5
 script = ExtResource("6_88iea")
-target = NodePath("../VehicleController/FormulaCar")
+target = NodePath("../RayCastCar")
 default_offset = Vector3(0, 2.5, 5)
+
+[node name="RayCastCar" parent="." node_paths=PackedStringArray("chase_camera") instance=ExtResource("16_fyij8")]
+transform = Transform3D(-0.52205205, 0, 0.8529136, 0, 1, 0, -0.8529136, 0, -0.52205205, 116.22505, 8.76048, -70.390816)
+chase_camera = NodePath("../ChaseCam")
 
 [editable path="WindigCircuit"]

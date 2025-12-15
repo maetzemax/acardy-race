@@ -52,9 +52,9 @@ folder_colors={
 
 [global_group]
 
-grass=""
-track=""
 CycleController=""
+Grass=""
+Road=""
 
 [input]
 
@@ -84,7 +84,7 @@ brake={
 , Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":4,"axis_value":1.0,"script":null)
 ]
 }
-handbreak={
+handbrake={
 "deadzone": 0.2,
 "events": [Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":1,"pressure":0.0,"pressed":true,"script":null)
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":32,"location":0,"echo":false,"script":null)
@@ -110,6 +110,15 @@ switch_perspective={
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":86,"key_label":0,"unicode":118,"location":0,"echo":false,"script":null)
 ]
 }
+toggle_transmission={
+"deadzone": 0.2,
+"events": []
+}
+clutch={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":3,"axis_value":-1.0,"script":null)
+]
+}
 
 [input_devices]
 
@@ -119,7 +128,6 @@ pointing/emulate_mouse_from_touch=false
 
 common/physics_ticks_per_second=144
 common/max_physics_steps_per_frame=16
-3d/physics_engine="Jolt Physics"
 
 [rendering]
 

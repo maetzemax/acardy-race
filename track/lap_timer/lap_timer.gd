@@ -23,9 +23,9 @@ func _ready():
 
 func _process(delta: float) -> void:
 	if lap_started and not is_invalid_time:
-		if vehicle.is_off_track():
-			is_invalid_time = true
-			return
+		#if vehicle.is_off_track():
+			#is_invalid_time = true
+			#return
 		
 		current_lap_time += delta
 	

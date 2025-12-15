@@ -5,14 +5,14 @@ class_name RayCastWheel
 @export var offset_shapecast: float = 0.3
 
 @export_group("Wheel properties")
-@export var spring_strength = 100.0
-@export var spring_damping = 2.0
-@export var max_spring_force: float = INF
-@export var rest_dist = 0.5
+@export var spring_strength = 100.0  # Noch steifer für schweres Gefühl
+@export var spring_damping = 18.0  # Mehr Dämpfung für Gewichtsgefühl
+@export var max_spring_force: float = 12000.0  # Höhere maximale Kraft
+@export var rest_dist = 0.35  # Noch kürzer für direkteres Feedback
 @export var over_extend = 0.0
 @export var wheel_radius = 0.35
-@export var z_traction = 0.05
-@export var z_brake_traction = 0.25
+@export var z_traction = 0.25  # DEUTLICH mehr Grip (weg vom Eis-Gefühl)
+@export var z_brake_traction = 0.35
 
 @export_category("Motor")
 @export var is_motor = false
@@ -90,20 +90,37 @@ func apply_wheel_physics(car: RayCastCar) -> void:
 	var x_traction = grip_curve.sample_baked(grip_factor)
 
 	if car.is_slipping:
-		x_traction = 0.2
+		x_traction = 0.15  # Weniger aggressiv als 0.01 für realistischeres Verhalten
 
+	# Under/Oversteer basierend auf Position
+	var grip_multiplier = 1.0
+	if global_position.z > car.global_position.z:
+		# Vorderachse
+		grip_multiplier = car.front_grip_multiplier
+	else:
+		# Hinterachse
+		grip_multiplier = car.rear_grip_multiplier
 
 	var gravity = -car.get_gravity().y
-	var x_force = -global_basis.x * steering_x_vel * x_traction * ((car.mass * gravity)/car.total_wheels)
+	
+	# STABILISIERT: Nutze steering_x_vel aber begrenze die maximale Kraft
+	var base_lateral_force = ((car.mass * gravity) / car.total_wheels) * x_traction * grip_multiplier
+	# Erhöht auf 1.2 für deutlich mehr Kurvengri p - war viel zu niedrig!
+	var x_force = -global_basis.x * clamp(steering_x_vel, -80.0, 80.0) * base_lateral_force * 1.2
 
 
-	## Tire Z traction (Longidutinasl)
+	## Tire Z traction (Longitudinal)
 	var f_speed = forward_dir.dot(tire_vel)
 	var z_friction = z_traction
 	if absf(f_speed) < 0.01:
 		z_friction = 2.0
 	if is_braking:
-		z_friction = z_brake_traction
+		if global_position.z > car.global_position.z:
+			# Vorderachse
+			z_friction *= car.brake_grip_front
+		else:
+			# Hinterachse
+			z_friction *= car.brake_grip_rear
 	var z_force = global_basis.z * f_speed * z_friction * ((car.mass * gravity)/car.total_wheels) * 0.7
 
 	## Counter sliding
