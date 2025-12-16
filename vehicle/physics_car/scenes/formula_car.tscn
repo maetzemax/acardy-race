@@ -828,20 +828,14 @@ front_left_wheel = NodePath("WheelFL")
 front_right_wheel = NodePath("WheelFR")
 rear_left_wheel = NodePath("WheelRL")
 rear_right_wheel = NodePath("WheelRR")
-steering_speed = 5.0
-countersteer_speed = 12.0
-steering_speed_decay = 0.22
-steering_slip_assist = 0.25
-countersteer_assist = 0.7
-max_steering_angle = 0.5235987755982988
+steering_speed = 2.4
+steering_slip_assist = 0.3
+max_steering_angle = 0.2617993877991494
+throttle_speed = 15.0
 throttle_steering_adjust = 0.15
-braking_speed = 15.0
-brake_force_multiplier = 1.8
 front_brake_bias = 0.65
-front_abs_pulse_time = 0.02
-front_abs_spin_difference_threshold = 15.0
-rear_abs_pulse_time = 0.02
-rear_abs_spin_difference_threshold = 15.0
+front_abs_spin_difference_threshold = 10000.0
+rear_abs_spin_difference_threshold = 10000.0
 stability_yaw_engage_angle = 0.1
 stability_yaw_strength = 4.0
 stability_yaw_ground_multiplier = 1.5
@@ -872,40 +866,31 @@ rear_locking_differential_engage_torque = 250.0
 rear_torque_vectoring = 0.1
 vehicle_mass = 620.0
 front_weight_distribution = 0.52
+center_of_gravity_height_offset = -0.3
 front_resting_ratio = 0.8
-front_damping_ratio = 1.0
+front_damping_ratio = 0.9
 front_bump_damp_multiplier = 1.5
 front_bump_stop_multiplier = 0.8
 rear_resting_ratio = 0.8
-rear_damping_ratio = 1.0
+rear_damping_ratio = 0.9
 rear_bump_damp_multiplier = 1.5
 rear_bump_stop_multiplier = 0.8
-contact_patch = 0.28
+contact_patch = 0.35
 wheel_to_body_torque_multiplier = 1.2
-tire_stiffnesses = {
-"Dirt": 0.3,
-"Grass": 0.3,
-"Road": 12.0
-}
 coefficient_of_friction = {
-"Dirt": 2.0,
-"Grass": 1.5,
-"Road": 4.2
+"Dirt": 2.4,
+"Grass": 2.0,
+"Road": 5.0
 }
 rolling_resistance = {
-"Dirt": 3.0,
-"Grass": 5.0,
-"Road": 0.5
+"Dirt": 2.0,
+"Grass": 8.0,
+"Road": 1.0
 }
 lateral_grip_assist = {
 "Dirt": 0.0,
 "Grass": 0.0,
-"Road": 0.08
-}
-longitudinal_grip_ratio = {
-"Dirt": 0.55,
-"Grass": 0.5,
-"Road": 0.7
+"Road": 0.0
 }
 front_tire_radius = 0.45
 front_tire_width = 355.0
@@ -1023,7 +1008,7 @@ shape = SubResource("BoxShape3D_yyyvj")
 
 [node name="WheelFL" type="RayCast3D" parent="." node_paths=PackedStringArray("wheel_node")]
 process_physics_priority = -1
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.14395213, -2.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.14395213, -2.2)
 script = ExtResource("2_3h6qk")
 wheel_node = NodePath("Node3D")
 
@@ -1059,7 +1044,7 @@ skeleton = NodePath("")
 
 [node name="WheelRL" type="RayCast3D" parent="." node_paths=PackedStringArray("wheel_node")]
 process_physics_priority = -1
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.14395213, 1.4667989)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.144, 1.467)
 script = ExtResource("2_3h6qk")
 wheel_node = NodePath("Node3D")
 

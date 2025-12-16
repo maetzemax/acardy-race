@@ -1,6 +1,7 @@
 extends Control
 
 #region DeadzoneSettings
+@export_group("Deadzone")
 @export var accelerate_value_label: Label
 @export var brake_value_label: Label
 @export var steering_value_label: Label
@@ -14,11 +15,17 @@ var brake_deadzone: float = 0.1
 var steering_deadzone: float = 0.1
 #endregion
 
+#region Driver Aids
+@export_group("Driver Aids")
 @export var shift_assistant: CheckBox
+@export var stability_assistant: CheckBox
+#endregion
 
+@export_group("Online")
 @export var username_line_edit: LineEdit
 
 #region Graphics
+@export_group("Driver Aids")
 @export var resolution_selection: OptionButton
 @export var fullscreen: CheckBox
 
@@ -27,6 +34,7 @@ var steering_deadzone: float = 0.1
 @export var shadow_quality: OptionButton
 #endregion
 
+@export_group("Other")
 @export var save_button: Button
 
 
@@ -76,7 +84,8 @@ func _on_save():
 	OptionsService.set_graphic_settings(graphics)
 	
 	var driver_aids = DriverAidSettings.new(
-		shift_assistant.button_pressed
+		shift_assistant.button_pressed,
+		stability_assistant.button_pressed
 	)
 	OptionsService.set_driver_aid_settings(driver_aids)
 
@@ -116,8 +125,7 @@ func _on_resoulution_change(index):
 func _load_deadzone():
 	var deadzone = OptionsService.get_deadzone_settings()
 	
-	if not deadzone:
-		return
+	if not deadzone: return
 	
 	throttle_deadzone = deadzone.throttle
 	brake_deadzone = deadzone.brake
@@ -135,8 +143,7 @@ func _load_deadzone():
 func _load_graphics():
 	var graphics: GraphicSettings = OptionsService.get_graphic_settings()
 	
-	if not graphics:
-		return
+	if not graphics: return
 	
 	fullscreen.button_pressed = graphics.is_fullscreen
 	resolution_selection.select(graphics.resolution)
@@ -149,8 +156,8 @@ func _load_graphics():
 func _load_driver_aids():
 	var driver_aids: DriverAidSettings = OptionsService.get_driver_aid_settings()
 	
-	if not driver_aids:
-		return
+	if not driver_aids: return
 	
 	shift_assistant.button_pressed = driver_aids.shift_assistant
+	stability_assistant.button_pressed = driver_aids.stability_assistant
 	

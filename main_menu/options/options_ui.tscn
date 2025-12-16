@@ -18,7 +18,7 @@ _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\">
 "
 base_scale = 2.0
 
-[node name="OptionsUI" type="Control" node_paths=PackedStringArray("accelerate_value_label", "brake_value_label", "steering_value_label", "throttle_deadzone_slider", "brake_deadzone_slider", "steering_deadzone_slider", "shift_assistant", "username_line_edit", "resolution_selection", "fullscreen", "antialiasing_method", "antialiasing_quality", "shadow_quality", "save_button")]
+[node name="OptionsUI" type="Control" node_paths=PackedStringArray("accelerate_value_label", "brake_value_label", "steering_value_label", "throttle_deadzone_slider", "brake_deadzone_slider", "steering_deadzone_slider", "shift_assistant", "stability_assistant", "username_line_edit", "resolution_selection", "fullscreen", "antialiasing_method", "antialiasing_quality", "shadow_quality", "save_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,6 +35,7 @@ throttle_deadzone_slider = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadz
 brake_deadzone_slider = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Brake/HSlider")
 steering_deadzone_slider = NodePath("CenterBox/VBoxContainer/HBoxContainer/Deadzone/Steering/HSlider")
 shift_assistant = NodePath("CenterBox/VBoxContainer/HBoxContainer/DriverAids/ShiftAssistant/CheckBox")
+stability_assistant = NodePath("CenterBox/VBoxContainer/HBoxContainer/DriverAids/StabilityAssistant/CheckBox")
 username_line_edit = NodePath("CenterBox/VBoxContainer/HBoxContainer/Online/Username/LineEdit")
 resolution_selection = NodePath("CenterBox/VBoxContainer/HBoxContainer/Graphics/Resolution/ResolutionOption")
 fullscreen = NodePath("CenterBox/VBoxContainer/HBoxContainer/Graphics/Resolution/CheckBox")
@@ -176,6 +177,16 @@ theme_override_constants/h_separation = 12
 theme_override_font_sizes/font_size = 24
 text = "Shift Assistant"
 
+[node name="StabilityAssistant" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer/DriverAids"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CheckBox" type="CheckBox" parent="CenterBox/VBoxContainer/HBoxContainer/DriverAids/StabilityAssistant"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_font_sizes/font_size = 24
+text = "Stability Assistant"
+
 [node name="Online" type="VBoxContainer" parent="CenterBox/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
@@ -196,6 +207,7 @@ size_flags_horizontal = 3
 text = "Username"
 
 [node name="LineEdit" type="LineEdit" parent="CenterBox/VBoxContainer/HBoxContainer/Online/Username"]
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 placeholder_text = "PeterLustig123"
 
@@ -222,7 +234,6 @@ text = "Resolution"
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 selected = 1
-fit_to_longest_item = false
 item_count = 3
 popup/item_0/text = "2560x1440"
 popup/item_0/id = 0
@@ -250,7 +261,6 @@ text = "Antialising Method"
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 selected = 1
-fit_to_longest_item = false
 item_count = 3
 popup/item_0/text = "Disabled (Fastest)"
 popup/item_0/id = 0
@@ -272,7 +282,6 @@ text = "Anitaliasing Quality"
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 selected = 1
-fit_to_longest_item = false
 item_count = 4
 popup/item_0/text = "Disabled"
 popup/item_0/id = 0
@@ -296,7 +305,6 @@ text = "Shadows"
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 selected = 5
-fit_to_longest_item = false
 item_count = 6
 popup/item_0/text = "Hard"
 popup/item_0/id = 0

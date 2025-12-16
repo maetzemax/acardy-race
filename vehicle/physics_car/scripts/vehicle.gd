@@ -598,6 +598,7 @@ func initialize():
 	previous_global_position = global_position
 	
 	calculate_brake_force()
+	load_driver_aids()
 	
 	is_ready = true
 
@@ -836,7 +837,7 @@ func process_transmission() -> void:
 			
 			if current_gear < gear_ratios.size():
 				if current_gear > 0:
-					if current_ideal_gear_rpm > max_rpm:
+					if current_ideal_gear_rpm > max_rpm * 0.85:
 						if delta_time - last_shift_delta_time > shift_time:
 							shift(1)
 					if current_ideal_gear_rpm > max_rpm * 0.8 and current_real_gear_rpm > max_rpm:
@@ -1073,3 +1074,11 @@ func calculate_damping(weight : float, spring_rate : float, damping_ratio : floa
 
 func calculate_axle_spring_force(compression : float, spring_length : float, spring_rate : float) -> float:
 	return spring_length * compression * 1000.0 * spring_rate * 2.0
+
+func load_driver_aids():
+	var driver_aids: DriverAidSettings = OptionsService.get_driver_aid_settings()
+	
+	if not driver_aids: return
+	
+	automatic_transmission = driver_aids.shift_assistant
+	stability_active = driver_aids.stability_assistant
